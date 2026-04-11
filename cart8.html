@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peace Lily Plant</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary-green: #0f4c3a;
+      --secondary-green: #1a5c4a;
+      --accent-green: #22c55e;
+      --light-green: #f0fdf4;
+      --dark-text: #1f2937;
+      --medium-text: #6b7280;
+      --light-text: #9ca3af;
+      --white: #ffffff;
+      --light-bg: #fafafa;
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-medium: rgba(0, 0, 0, 0.1);
+      --shadow-heavy: rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+      color: var(--dark-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    .container { 
+      display: flex; 
+      flex-wrap: wrap; 
+      max-width: 1400px; 
+      margin: 40px auto; 
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px var(--shadow-medium);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-green) 0%, var(--accent-green) 100%);
+    }
+    
+    .left, .right { 
+      flex: 1 1 500px; 
+      padding: 60px 40px; 
+      transition: var(--transition);
+    }
+    
+    .left {
+      background: linear-gradient(135deg, #fafafa 0%, #f8f9fa 100%);
+      position: relative;
+    }
+    
+    .main-img { 
+      width: 100%; 
+      border-radius: 20px; 
+      box-shadow: 0 25px 50px var(--shadow-medium);
+      transition: var(--transition);
+      cursor: zoom-in;
+    }
+    
+    .main-img:hover {
+      transform: scale(1.02) translateY(-5px);
+      box-shadow: 0 30px 60px var(--shadow-heavy);
+    }
+    
+    .thumbs { 
+      display: flex; 
+      margin-top: 20px; 
+      gap: 15px; 
+      justify-content: center;
+    }
+    
+    .thumbs img { 
+      width: 80px; 
+      height: 80px; 
+      object-fit: cover; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      border: 3px solid transparent;
+      transition: var(--transition);
+      filter: brightness(0.9);
+    }
+    
+    .thumbs img:hover {
+      transform: translateY(-3px);
+      filter: brightness(1);
+      box-shadow: 0 8px 25px var(--shadow-medium);
+    }
+    
+    .thumbs img.active { 
+      border-color: var(--primary-green);
+      filter: brightness(1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px var(--shadow-medium);
+    }
+    
+    .right {
+      position: relative;
+    }
+    
+    h1 { 
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 16px;
+      display: flex; 
+      align-items: center; 
+      gap: 15px;
+      position: relative;
+    }
+    
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-green), var(--primary-green));
+      border-radius: 2px;
+    }
+    
+    .cart-badge {
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .cart-badge:hover {
+      transform: scale(1.1);
+    }
+    
+    #cartCount { 
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white; 
+      border-radius: 50%; 
+      padding: 4px 8px; 
+      font-size: 12px;
+      font-weight: 600;
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      min-width: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .price { 
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 20px 0;
+      color: var(--primary-green);
+    }
+    
+    .price del { 
+      color: var(--medium-text);
+      font-size: 1.4rem;
+      margin-left: 12px;
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 30px;
+      padding: 8px 12px;
+      background: var(--light-green);
+      border-radius: 8px;
+      width: fit-content;
+    }
+    
+    .section-title { 
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: var(--dark-text);
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .planters, .colors { 
+      display: flex; 
+      gap: 12px; 
+      flex-wrap: wrap;
+    }
+    
+    .planters button {
+      border: 2px solid #e5e7eb;
+      background: var(--white);
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .planters button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: var(--transition);
+    }
+    
+    .planters button:hover {
+      border-color: var(--accent-green);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--shadow-medium);
+    }
+    
+    .planters button:hover::before {
+      left: 100%;
+    }
+    
+    .planters button.active { 
+      border-color: var(--primary-green);
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.3);
+    }
+    
+    .colors button { 
+      width: 45px; 
+      height: 45px; 
+      border-radius: 50%; 
+      border: 3px solid #e5e7eb;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .colors button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: var(--transition);
+    }
+    
+    .colors button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px var(--shadow-medium);
+    }
+    
+    .colors button:hover::after {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .colors button.active {
+      border-color: var(--primary-green);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px rgba(15, 76, 58, 0.2);
+    }
+    
+    .gift { 
+      margin: 30px 0;
+      padding: 16px;
+      background: var(--light-green);
+      border-radius: 12px;
+      border-left: 4px solid var(--accent-green);
+    }
+    
+    .gift input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    
+    .quantity { 
+      display: flex; 
+      align-items: center; 
+      gap: 16px; 
+      margin: 30px 0;
+      justify-content: center;
+      background: var(--light-bg);
+      padding: 12px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+    
+    .quantity button { 
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: var(--primary-green);
+      color: white;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .quantity button:hover {
+      background: var(--secondary-green);
+      transform: scale(1.05);
+    }
+    
+    .quantity button:active {
+      transform: scale(0.95);
+    }
+    
+    #qty {
+      font-size: 1.2rem;
+      font-weight: 600;
+      min-width: 30px;
+      text-align: center;
+    }
+    
+    .actions { 
+      display: flex; 
+      gap: 16px; 
+      margin-top: 40px;
+    }
+    
+    .actions button {
+      flex: 1; 
+      padding: 16px 24px; 
+      border: none; 
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .actions button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: var(--transition);
+    }
+    
+    .actions button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .add-cart { 
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.3);
+    }
+    
+    .add-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(15, 76, 58, 0.4);
+    }
+    
+    .buy-now { 
+      background: linear-gradient(135deg, var(--accent-green), #16a34a);
+      color: white;
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+    }
+    
+    .buy-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(34, 197, 94, 0.4);
+    }
+    
+    .offers {
+      margin-top: 40px; 
+      background: linear-gradient(135deg, var(--light-green), #ecfdf5);
+      padding: 24px; 
+      border-left: 4px solid var(--accent-green); 
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .offers::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.1), transparent);
+      border-radius: 50%;
+    }
+    
+    /* Modal Styles */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0; 
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background: var(--white);
+      margin: 5% auto; 
+      padding: 40px; 
+      border-radius: 24px; 
+      width: 90%; 
+      max-width: 500px; 
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+    }
+    
+    @keyframes modalSlideIn { 
+      from { opacity: 0; transform: translateY(-50px) scale(0.9); } 
+      to { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+    
+    .modal h2 {
+      color: var(--primary-green);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    
+    .pay-btn { 
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white; 
+      padding: 14px 28px; 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      margin: 8px;
+    }
+    
+    .pay-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.3);
+    }
+    
+    .close-btn { 
+      background: #f3f4f6;
+      color: var(--medium-text);
+      padding: 14px 28px; 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      margin: 8px;
+    }
+    
+    .close-btn:hover {
+      background: #e5e7eb;
+      transform: translateY(-1px);
+    }
+    
+    .pay-input { 
+      width: 90%; 
+      padding: 12px 16px; 
+      margin: 8px auto; 
+      border: 2px solid #e5e7eb; 
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: var(--transition);
+      display: block;
+    }
+    
+    .pay-input:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+    
+    .loader { 
+      border: 4px solid #f3f3f3; 
+      border-top: 4px solid var(--accent-green); 
+      border-radius: 50%; 
+      width: 50px; 
+      height: 50px; 
+      margin: 20px auto; 
+      animation: spin 1s linear infinite; 
+    }
+    
+    @keyframes spin { 
+      0% { transform: rotate(0deg); } 
+      100% { transform: rotate(360deg); } 
+    }
+    
+    /* Order Tracking */
+    .tracking { 
+      margin-top: 30px; 
+      text-align: left; 
+      background: var(--light-bg);
+      padding: 20px;
+      border-radius: 12px;
+    }
+    
+    .progress-bar { 
+      display: flex; 
+      justify-content: space-between; 
+      margin: 20px 0; 
+      position: relative; 
+    }
+    
+    .progress-bar::before { 
+      content: ""; 
+      position: absolute; 
+      top: 12px; 
+      left: 10%; 
+      width: 80%; 
+      height: 4px; 
+      background: #ddd; 
+      z-index: 0; 
+      border-radius: 2px;
+    }
+    
+    .step { 
+      position: relative; 
+      z-index: 1; 
+      width: 30px; 
+      height: 30px; 
+      border-radius: 50%; 
+      background: #ccc; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: white; 
+      font-size: 14px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .step.active { 
+      background: linear-gradient(135deg, var(--accent-green), #16a34a);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        border-radius: 16px;
+      }
+      
+      .left, .right {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .planters, .colors {
+        justify-content: center;
+      }
+    }
+    
+    /* Animation for page load */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .container {
+      animation: fadeInUp 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Left Section -->
+  <div class="left">
+    <img id="mainImage" src="IMG/m1.webp" alt="Peace Lily Plant" class="main-img">
+    <div class="thumbs">
+      <img src="IMG/m1.webp" class="thumb active" onclick="changeImage(this)">
+      <img src="IMG/m2.webp" class="thumb" onclick="changeImage(this)">
+      <img src="IMG/m3.webp" class="thumb" onclick="changeImage(this)">
+      <img src="IMG/m4.webp" class="thumb" onclick="changeImage(this)">
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="right">
+    <h1>Money Plant 
+      <span class="cart-badge">🛒<span id="cartCount">0</span></span>
+    </h1>
+    <div class="price">₹299 <del>₹399</del></div>
+    <div class="rating">⭐ 10.10 (20 Reviews)</div>
+
+    <div class="section-title">Select Planter</div>
+    <div class="planters">
+      <button onclick="selectPlanter(this)">GroPot</button>
+      <button onclick="selectPlanter(this)">Lagos</button>
+      <button class="active" onclick="selectPlanter(this)">Krish</button>
+      <button onclick="selectPlanter(this)">Spiro</button>
+    </div>
+
+    <div class="section-title">Color – Ivory</div>
+    <div class="colors">
+      <button style="background:red;" onclick="selectColor(this, 'red')"></button>
+      <button style="background:#3e2723;" onclick="selectColor(this, 'brown')"></button>
+      <button style="background:green;" onclick="selectColor(this, 'green')"></button>
+      <button style="background:yellow;" onclick="selectColor(this, 'yellow')"></button>
+    </div>
+
+    <div class="gift">
+      <input type="checkbox" id="gift"> 
+      <label for="gift">Make This a Gift</label>
+    </div>
+
+    <div class="quantity">
+      <button onclick="updateQuantity(-1)">−</button>
+      <span id="qty">1</span>
+      <button onclick="updateQuantity(1)">+</button>
+    </div>
+
+    <div class="actions">
+      <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+      <button class="buy-now" onclick="openCheckout()">Buy Now</button>
+    </div>
+
+    <div class="offers">
+      🎁 <strong>Your Offers & Gift Cards</strong><br>
+      Exclusive offers from banks & brands just for you!
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" class="modal">
+  <!-- Step 1 -->
+  <div class="modal-content" id="checkoutStep1">
+    <h2>Checkout Summary</h2>
+    <p><strong>Peace Lily Plant</strong><br>
+       Quantity: <span id="checkoutQty">1</span><br>
+       <strong>Total: ₹<span id="checkoutTotal">330</span></strong></p>
+    <button class="pay-btn" onclick="goToPayment()">Proceed to Payment</button>
+    <button class="close-btn" onclick="closeCheckout()">Cancel</button>
+  </div>
+  
+  <!-- Step 2 -->
+  <div class="modal-content" id="checkoutStep2" style="display:none;">
+    <h2>Payment Details</h2>
+    <input type="text" placeholder="Card Holder Name" class="pay-input">
+    <input type="text" placeholder="Card Number" maxlength="16" class="pay-input">
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <input type="text" placeholder="MM/YY" maxlength="5" class="pay-input" style="width:120px;">
+      <input type="text" placeholder="CVV" maxlength="3" class="pay-input" style="width:100px;">
+    </div>
+    <button class="pay-btn" onclick="processPayment()">Pay Now</button>
+    <button class="close-btn" onclick="closeCheckout()">Cancel</button>
+  </div>
+  
+  <!-- Step 3 -->
+  <div class="modal-content" id="checkoutStep3" style="display:none;">
+    <h2>Processing Payment...</h2>
+    <div class="loader"></div>
+    <p>Please wait while we process your payment securely.</p>
+  </div>
+  
+  <!-- Step 4 -->
+  <div class="modal-content" id="checkoutStep4" style="display:none;">
+    <h2>✅ Payment Successful!</h2>
+    <p><strong>Your order has been placed successfully! 🎉</strong></p>
+    <div class="tracking">
+      <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+      <p><strong>Delivery To:</strong> NJSMTI, Chanduvaav. 📍</p>
+      <p><strong>Est. Delivery:</strong> <span id="deliveryDate"></span></p>
+      <div class="progress-bar">
+        <div class="step active">✓</div>
+        <div class="step">✓</div>
+        <div class="step">✓</div>
+        <div class="step">✓</div>
+      </div>
+      <p style="font-size:14px; margin-top: 10px;">Ordered → Packed → Shipped → Out for Delivery</p>
+    </div>
+    <button class="pay-btn" onclick="closeCheckout()">Close</button>
+  </div>
+</div>
+
+<script>
+  let cartCount = 0;
+
+  function changeImage(el) {
+    document.getElementById('mainImage').src = el.src;
+    document.querySelectorAll('.thumb').forEach(img => img.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function selectPlanter(el) {
+    document.querySelectorAll('.planters button').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Color → Image mapping
+  const colorImages = {
+    red: "IMG/mr4.webp",
+    brown: "IMG/mb2.webp", 
+    green: "IMG/mg1.webp",
+    yellow: "IMG/my3.webp"
+  };
+
+  function selectColor(el, color) {
+    document.querySelectorAll('.colors button').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+    if(colorImages[color]) {
+      document.getElementById('mainImage').src = colorImages[color];
+    }
+  }
+
+  function updateQuantity(change) {
+    let qty = parseInt(document.getElementById('qty').innerText);
+    qty = Math.max(1, qty + change);
+    document.getElementById('qty').innerText = qty;
+  }
+
+  function addToCart() {
+    cartCount++;
+    document.getElementById('cartCount').innerText = cartCount;
+    
+    // Add visual feedback
+    const cartBadge = document.querySelector('.cart-badge');
+    cartBadge.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      cartBadge.style.transform = 'scale(1)';
+    }, 200);
+  }
+
+  function openCheckout() {
+    document.getElementById('checkoutModal').style.display = "block";
+    document.getElementById('checkoutQty').innerText = document.getElementById('qty').innerText;
+    document.getElementById('checkoutTotal').innerText = 299 * parseInt(document.getElementById('qty').innerText);
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkoutModal').style.display = "none";
+    document.querySelectorAll('#checkoutModal .modal-content').forEach(div => div.style.display = "none");
+    document.getElementById('checkoutStep1').style.display = "block";
+  }
+
+  function goToPayment() {
+    document.getElementById('checkoutStep1').style.display = "none";
+    document.getElementById('checkoutStep2').style.display = "block";
+  }
+
+  function processPayment() {
+    document.getElementById('checkoutStep2').style.display = "none";
+    document.getElementById('checkoutStep3').style.display = "block";
+    
+    setTimeout(() => {
+      document.getElementById('checkoutStep3').style.display = "none";
+      document.getElementById('checkoutStep4').style.display = "block";
+      document.getElementById('orderId').innerText = "ORD" + Math.floor(Math.random()*1000000);
+      let d = new Date(); 
+      d.setDate(d.getDate()+3);
+      document.getElementById('deliveryDate').innerText = d.toDateString();
+      cartCount = 0; 
+      document.getElementById('cartCount').innerText = cartCount;
+    }, 2500);
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('checkoutModal');
+    if (event.target == modal) {
+      closeCheckout();
+    }
+  }
+
+  // Add subtle parallax effect
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const container = document.querySelector('.container');
+    container.style.transform = `translateY(${scrolled * 0.05}px)`;
+  });
+</script>
+</body>
+</html>

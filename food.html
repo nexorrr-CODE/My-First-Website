@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QuickBite — Food Delivery (Full)</title>
+  <style>
+    :root{
+      --accent:#ff5a3c;
+      --dark:#222;
+      --muted:#777;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--dark);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+    }
+
+    /* NAVBAR */
+    header.site-header{
+      position:sticky;
+      top:0;
+      z-index:60;
+      backdrop-filter: blur(6px);
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+      border-bottom:1px solid rgba(0,0,0,0.06);
+      padding:10px 18px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
+    .brand .logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#ff8b6a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    nav.main-nav{margin-left:8px; display:flex; gap:12px; align-items:center;}
+    nav.main-nav a{color:var(--dark); text-decoration:none; padding:6px 10px; border-radius:8px; font-size:14px;}
+    .search-wrap{margin-left:18px; display:flex; gap:8px; align-items:center;}
+    .search-wrap input{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);width:220px}
+    .cart-btn{margin-left:auto; display:flex; gap:10px; align-items:center; cursor:pointer; background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:10px;}
+    .cart-btn .count{background:rgba(255,255,255,0.18); padding:4px 8px; border-radius:8px; font-weight:700}
+
+    /* LAYOUT */
+    .page{display:grid; grid-template-columns: 1fr 360px; gap:20px; padding:22px; max-width:1200px; margin:18px auto; align-items:start;}
+    /* HERO */
+    .hero{grid-column:1 / span 1; background:linear-gradient(180deg, rgba(255,250,248,1), rgba(255,255,255,0)); padding:18px; border-radius:var(--radius); display:flex; gap:16px; align-items:center; box-shadow:0 6px 18px rgba(30,30,30,0.03);}
+    .hero .left{flex:1}
+    .hero h1{font-size:26px;margin-bottom:6px}
+    .hero p{color:var(--muted); margin-bottom:12px}
+    .hero .cta{display:flex; gap:10px}
+    .btn{background:var(--accent); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700;}
+    .btn.secondary{background:#fff; border:1px solid rgba(0,0,0,0.06); color:var(--dark)}
+    .art{width:210px;height:140px;border-radius:10px; overflow:hidden; flex-shrink:0}
+    .art img{width:100%;height:100%;object-fit:cover}
+
+    /* SECTIONS */
+    .top-controls{display:flex; gap:12px; align-items:center; margin-top:14px}
+    .select, .search-inline{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); background:#fff}
+
+    .sections{margin-top:12px; display:grid; gap:14px}
+    .categories{display:flex; gap:10px; flex-wrap:wrap;}
+    .cat{background:var(--card); padding:8px 10px; border-radius:10px; box-shadow:0 6px 14px rgba(30,30,30,0.03); cursor:pointer; display:flex; gap:8px; align-items:center; font-weight:600}
+    .cat img{width:36px;height:36px;border-radius:8px; object-fit:cover}
+
+    .products{margin-top:6px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px;}
+    .product{background:var(--card); border-radius:12px; padding:12px; display:flex; gap:12px; align-items:center; box-shadow:0 6px 18px rgba(12,12,12,0.03);}
+    .thumb{width:120px;height:84px;border-radius:10px; overflow:hidden; flex-shrink:0}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .meta{flex:1}
+    .meta h4{margin:0 0 6px 0}
+    .price-row{display:flex; gap:10px; align-items:center}
+    .price{font-weight:800}
+    .old{color:var(--muted); text-decoration:line-through; font-weight:600; font-size:13px}
+    .rating{font-size:13px;color:#d99000;margin-left:6px}
+
+    .actions{display:flex; gap:8px; margin-top:8px}
+    .actions .add{background:linear-gradient(90deg,var(--accent),#ff8b6a); color:#fff; border:none;padding:8px 10px;border-radius:10px; cursor:pointer; font-weight:700}
+    .actions .view{background:#fff;border:1px solid rgba(0,0,0,0.06); padding:8px 10px; border-radius:10px; cursor:pointer}
+
+    /* RIGHT SIDEBAR CART */
+    aside.cart{background:var(--card); padding:16px; border-radius:12px; height:fit-content; position:sticky; top:90px; box-shadow:0 6px 18px rgba(12,12,12,0.04)}
+    aside.cart h3{margin-top:0}
+    .cart-list{list-style:none; padding:0; margin:8px 0 12px 0; max-height:320px; overflow:auto; display:flex; flex-direction:column; gap:10px}
+    .cart-item{display:flex; gap:10px; align-items:center; background:var(--bg); padding:8px; border-radius:10px}
+    .ci-thumb{width:56px;height:44px;border-radius:8px; overflow:hidden;flex-shrink:0}
+    .ci-meta{flex:1}
+    .ci-meta b{display:block}
+    .qty-control{display:flex; gap:8px; align-items:center}
+    .qty-control button{width:30px;height:30px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:#fff; cursor:pointer; font-size:16px}
+    .remove{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px}
+
+    .cart-footer{display:flex; gap:10px; align-items:center; justify-content:space-between}
+    .total{font-weight:800; font-size:18px}
+    .checkout-btn{background:linear-gradient(90deg,var(--accent),#ff8b6a); color:#fff; border:none; padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:800}
+
+    /* MODALS & OVERLAYS */
+    .overlay{position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:120}
+    .modal{background:var(--card); padding:16px; border-radius:12px; width:520px; max-width:94%; box-shadow:0 8px 40px rgba(10,10,10,0.3)}
+    .modal .row{display:flex; gap:12px}
+    .modal img{width:180px;height:130px;object-fit:cover;border-radius:10px}
+    .close-modal{background:transparent;border:none;font-size:18px;float:right;cursor:pointer}
+
+    /* PAYMENT DIALOG */
+    .payment-box{display:flex; flex-direction:column; gap:10px; align-items:center}
+    .loader{width:48px;height:48px;border-radius:50%;border:6px solid rgba(0,0,0,0.08); border-top-color:var(--accent); animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* small screens */
+    @media (max-width:900px){
+      .page{grid-template-columns: 1fr; padding:16px}
+      aside.cart{position:static; top:auto;margin-top:12px}
+      .products{grid-template-columns: repeat(1, minmax(0,1fr));}
+      .hero{flex-direction:column; align-items:flex-start}
+      .art{width:100%; height:160px}
+      .search-wrap input{width:140px}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo">QB</div>
+      <div>
+        <div style="font-size:14px">QuickBite</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Fast & Fresh</div>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#menu">Menu</a>
+      <a href="#categories">Categories</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="search-wrap" role="search" aria-label="Search products">
+      <input id="search-input" placeholder="Search products..." aria-label="Search products">
+      <select id="sort-select" class="select" title="Sort products">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="name-asc">Name: A → Z</option>
+        <option value="name-desc">Name: Z → A</option>
+      </select>
+    </div>
+
+    <button class="cart-btn" id="open-cart" title="Open cart">
+      Cart <span class="count" id="cart-count">0</span>
+    </button>
+  </header>
+
+  <main class="page" id="main-page">
+    <section>
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="left">
+          <h1 id="hero-title">Delicious food, delivered fast</h1>
+          <p class="muted">Choose from a wide variety of meals — pizzas, burgers, pastas and more. Freshly prepared and delivered hot to your door.</p>
+          <div class="cta">
+            <button class="btn" id="shop-now">Shop Now</button>
+            <button class="btn secondary" id="view-categories">Explore Categories</button>
+          </div>
+          <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+            <div style="background:rgba(0,0,0,0.05); padding:6px 10px; border-radius:999px; font-weight:700;">Free delivery ₹99+</div>
+            <div class="muted" style="margin-left:6px">• 30-40 min</div>
+          </div>
+        </div>
+        <div class="art" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b9a2ce9659b6cf0d0a4f6c6a8b5e9b1" alt="hero food">
+        </div>
+      </section>
+
+      <!-- CATEGORIES & PRODUCTS -->
+      <div class="sections" id="categories">
+        <div class="categories" aria-hidden="false">
+          <div class="cat" data-cat="all"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop&s=5c0f" alt=""><span>All</span></div>
+          <div class="cat" data-cat="pizza"><img src="https://images.unsplash.com/photo-1548365328-9b20b6f6fe80?q=80&w=800&auto=format&fit=crop&s=36ce4b5e0b7f5ce286d0b9f5" alt=""><span>Pizza</span></div>
+          <div class="cat" data-cat="burger"><img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop&s=2f5e3f86e10c9f68b2a7f5f8" alt=""><span>Burger</span></div>
+          <div class="cat" data-cat="pasta"><img src="https://images.unsplash.com/photo-1603133872878-3a3b6b0e2f75?q=80&w=800&auto=format&fit=crop&s=1590b4a4d6e7a6a9f9f0" alt=""><span>Pasta</span></div>
+          <div class="cat" data-cat="sandwich"><img src="https://images.unsplash.com/photo-1565895405227-1b2e6f8b9dae?q=80&w=800&auto=format&fit=crop&s=2b9b1c8a7c3d1e5f2a7" alt=""><span>Sandwich</span></div>
+        </div>
+
+        <!-- PRODUCT LIST -->
+        <div id="menu" class="products" aria-live="polite">
+          <!-- product items injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CART SIDEBAR -->
+    <aside class="cart" aria-labelledby="cart-title">
+      <h3 id="cart-title">Your Order</h3>
+      <p class="muted">Items in your cart are saved automatically.</p>
+
+      <ul class="cart-list" id="cart-list">
+        <!-- cart items -->
+      </ul>
+
+      <div class="cart-footer">
+        <div>
+          <div class="muted">Subtotal</div>
+          <div class="total" id="cart-total">₹0.00</div>
+        </div>
+        <div style="text-align:right">
+          <button class="checkout-btn" id="checkout">Checkout</button>
+        </div>
+      </div>
+      <div style="margin-top:10px; display:flex; gap:8px;">
+        <button class="btn secondary" id="clear-cart">Clear</button>
+        <button class="btn" id="continue-shopping">Continue</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- VIEW MODAL -->
+  <div class="overlay" id="view-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" id="view-modal">
+      <button class="close-modal" id="close-view">&times;</button>
+      <div class="row" id="view-row"></div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="overlay" id="checkout-overlay" aria-hidden="true">
+    <div class="modal" id="checkout-modal">
+      <button class="close-modal" id="close-checkout">&times;</button>
+      <h3>Checkout</h3>
+      <p class="muted">Enter details to place your order. Payment simulated in the next step.</p>
+
+      <form id="checkout-form" class="checkout-form" onsubmit="return false;">
+        <input type="text" id="cust-name" class="input" placeholder="Full name" required>
+        <input type="email" id="cust-email" class="input" placeholder="Email" required>
+        <input type="tel" id="cust-phone" class="input" placeholder="Phone (optional)">
+        <textarea id="cust-address" class="input" placeholder="Delivery address" rows="3" required></textarea>
+
+        <div style="display:flex; gap:8px; align-items:center; justify-content:space-between;">
+          <div class="muted">Total:</div>
+          <div class="total" id="checkout-total">₹0.00</div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button class="btn" id="proceed-payment">Proceed to Payment</button>
+          <button class="btn secondary" id="cancel-order" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PAYMENT MODAL (FAKE PAYMENT) -->
+  <div class="overlay" id="payment-overlay" aria-hidden="true">
+    <div class="modal" id="payment-modal">
+      <button class="close-modal" id="close-payment">&times;</button>
+      <h3>Payment</h3>
+      <div class="payment-box" id="payment-box">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div class="muted">Amount</div>
+            <div class="total" id="payment-amount">₹0.00</div>
+          </div>
+          <div style="text-align:right">
+            <div class="muted">Method</div>
+            <div style="font-weight:700">Demo Card</div>
+          </div>
+        </div>
+
+        <div style="width:100%; margin-top:10px;">
+          <input class="input" id="card-name" placeholder="Name on Card (demo)" />
+          <input class="input" id="card-number" placeholder="Card number (enter any digits)" />
+        </div>
+
+        <div style="display:flex; gap:8px; width:100%; margin-top:8px;">
+          <button class="btn" id="pay-now">Pay Now</button>
+          <button class="btn secondary" id="pay-cancel">Cancel</button>
+        </div>
+
+        <div id="payment-status" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER SUCCESS MODAL -->
+  <div class="overlay" id="success-overlay" aria-hidden="true">
+    <div class="modal" id="success-modal">
+      <h3>Payment Successful 🎉</h3>
+      <p class="muted" id="success-msg">Your order has been placed.</p>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+        <button class="btn" id="success-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*********
+     * DATA & STATE
+     *********/
+    const PRODUCTS = [
+      { id: "p1", name: "Margherita Pizza", price: 199, old: 249, rating: 4.5, category: "pizza", img: "https://images.unsplash.com/photo-1548365328-9b20b6f6fe80?q=80&w=800&auto=format&fit=crop&s=36ce4b5e0b7f5ce286d0b9f5" },
+      { id: "p2", name: "Pepperoni Feast", price: 249, old: 299, rating: 4.7, category: "pizza", img: "https://images.unsplash.com/photo-1601924582971-3b9d29b4a4b8?q=80&w=800&auto=format&fit=crop&s=4b6e9e2b7a6c" },
+      { id: "p3", name: "Classic Burger", price: 149, old: 179, rating: 4.3, category: "burger", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop&s=2f5e3f86e10c9f68b2a7f5f8" },
+      { id: "p4", name: "Cheesy Pasta", price: 179, old: 209, rating: 4.4, category: "pasta", img: "https://images.unsplash.com/photo-1603133872878-3a3b6b0e2f75?q=80&w=800&auto=format&fit=crop&s=1590b4a4d6e7a6a9f9f0" },
+      { id: "p5", name: "Veg Sandwich", price: 99, old: 129, rating: 4.1, category: "sandwich", img: "https://images.unsplash.com/photo-1565895405227-1b2e6f8b9dae?q=80&w=800&auto=format&fit=crop&s=2b9b1c8a7c3d1e5f2a7" },
+      { id: "p6", name: "Grilled Chicken", price: 259, old: 289, rating: 4.6, category: "burger", img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=800&auto=format&fit=crop&s=9f6b7a8c1d2e3f4b5a6" },
+      { id: "p7", name: "Spicy Fries", price: 79, old: 99, rating: 4.0, category: "sandwich", img: "https://images.unsplash.com/photo-1547592166-1e2d29d7a0bd?q=80&w=800&auto=format&fit=crop&s=8b7a6f4d3c2b1a0e9f8" },
+      { id: "p8", name: "Creamy Alfredo", price: 199, old: 229, rating: 4.2, category: "pasta", img: "https://images.unsplash.com/photo-1603075122159-9f1dca7f1b33?q=80&w=800&auto=format&fit=crop&s=1a2b3c4d5e6f" }
+    ];
+
+    const STORAGE_KEY = "quickbite_cart_v2";
+    let cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+    /* DOM refs */
+    const productsWrap = document.getElementById("menu");
+    const cartList = document.getElementById("cart-list");
+    const cartTotalEl = document.getElementById("cart-total");
+    const cartCountEl = document.getElementById("cart-count");
+    const checkoutOverlay = document.getElementById("checkout-overlay");
+    const paymentOverlay = document.getElementById("payment-overlay");
+    const successOverlay = document.getElementById("success-overlay");
+    const viewOverlay = document.getElementById("view-overlay");
+    const searchInput = document.getElementById("search-input");
+    const sortSelect = document.getElementById("sort-select");
+
+    /*********
+     * HELPERS
+     *********/
+    function saveCart(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      renderCart();
+    }
+    function formatINR(n){
+      return "₹" + Number(n).toFixed(2);
+    }
+    function calcTotal(){
+      let total = 0;
+      for(const id in cart){
+        const item = cart[id];
+        const sub = Number(item.price) * Number(item.qty);
+        total = Number((Number(total) + Number(sub)).toFixed(2));
+      }
+      return total;
+    }
+
+    /*********
+     * PRODUCTS RENDER + SEARCH + SORT
+     *********/
+    function getFilteredSortedProducts(){
+      const q = (searchInput.value || "").trim().toLowerCase();
+      let list = PRODUCTS.filter(p => {
+        if(!q) return true;
+        return p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      });
+
+      const sort = sortSelect.value;
+      if(sort === "price-asc") list.sort((a,b)=> a.price - b.price);
+      else if(sort === "price-desc") list.sort((a,b)=> b.price - a.price);
+      else if(sort === "name-asc") list.sort((a,b)=> a.name.localeCompare(b.name));
+      else if(sort === "name-desc") list.sort((a,b)=> b.name.localeCompare(a.name));
+      // default: keep original order (featured)
+      return list;
+    }
+
+    function renderProducts(filterCategory = null){
+      productsWrap.innerHTML = "";
+      let list = getFilteredSortedProducts();
+      if(filterCategory && filterCategory !== "all") list = list.filter(p => p.category === filterCategory);
+
+      list.forEach(p => {
+        const el = document.createElement("article");
+        el.className = "product";
+        el.innerHTML = `
+          <div class="thumb"><img loading="lazy" src="${p.img}" alt="${p.name}"></div>
+          <div class="meta">
+            <h4>${p.name} <span class="rating">★ ${p.rating}</span></h4>
+            <div class="price-row">
+              <div class="price">${formatINR(p.price)}</div>
+              <div class="old">${formatINR(p.old)}</div>
+            </div>
+            <div class="actions">
+              <button class="add" data-id="${p.id}">Add</button>
+              <button class="view" data-id="${p.id}">View</button>
+            </div>
+          </div>
+        `;
+        productsWrap.appendChild(el);
+      });
+      attachProductListeners();
+    }
+
+    /* product buttons */
+    function attachProductListeners(){
+      document.querySelectorAll(".add").forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute("data-id");
+          addToCart(id, 1);
+          b.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.96)' }, { transform: 'scale(1)' }], { duration: 160 });
+        };
+      });
+      document.querySelectorAll(".view").forEach(b => {
+        b.onclick = () => openViewModal(b.getAttribute("data-id"));
+      });
+    }
+
+    /*********
+     * CART MANAGEMENT
+     *********/
+    function addToCart(id, qty){
+      const product = PRODUCTS.find(p => p.id === id);
+      if(!product) return;
+      if(!cart[id]) cart[id] = { ...product, qty: 0 };
+      cart[id].qty = Number(cart[id].qty) + Number(qty);
+      saveCart();
+      showToast(${product.name} added to cart);
+    }
+
+    function renderCart(){
+      cartList.innerHTML = "";
+      let count = 0;
+      for(const id in cart){
+        const item = cart[id];
+        count += Number(item.qty);
+        const li = document.createElement("li");
+        li.className = "cart-item";
+        li.innerHTML = `
+          <div class="ci-thumb"><img src="${item.img}" alt="${item.name}"></div>
+          <div class="ci-meta">
+            <b>${item.name}</b>
+            <div class="muted">${formatINR(item.price)} each</div>
+            <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+              <div class="qty-control">
+                <button data-id="${id}" class="dec">−</button>
+                <div style="min-width:28px; text-align:center; font-weight:700">${item.qty}</div>
+                <button data-id="${id}" class="inc">+</button>
+              </div>
+              <button class="remove" data-id="${id}">Remove</button>
+            </div>
+          </div>
+          <div style="text-align:right; min-width:80px;">
+            <div style="font-weight:700">${formatINR(Number(item.price) * Number(item.qty))}</div>
+            <div class="muted" style="font-size:12px">Qty: ${item.qty}</div>
+          </div>
+        `;
+        cartList.appendChild(li);
+      }
+
+      const total = calcTotal();
+      cartTotalEl.textContent = formatINR(total);
+      cartCountEl.textContent = count;
+      attachCartListeners();
+    }
+
+    function attachCartListeners(){
+      document.querySelectorAll(".inc").forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute("data-id");
+          cart[id].qty = Number(cart[id].qty) + 1;
+          saveCart();
+        };
+      });
+      document.querySelectorAll(".dec").forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute("data-id");
+          cart[id].qty = Math.max(0, Number(cart[id].qty) - 1);
+          if(Number(cart[id].qty) === 0) delete cart[id];
+          saveCart();
+        };
+      });
+      document.querySelectorAll(".remove").forEach(b=>{
+        b.onclick = () => {
+          const id = b.getAttribute("data-id");
+          if(cart[id]) delete cart[id];
+          saveCart();
+        };
+      });
+    }
+
+    /*********
+     * VIEW MODAL
+     *********/
+    function openViewModal(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      viewOverlay.style.display = "flex";
+      viewOverlay.setAttribute("aria-hidden","false");
+      const row = document.getElementById("view-row");
+      row.innerHTML = `
+        <div style="flex:1"><img src="${p.img}" alt="${p.name}"></div>
+        <div style="flex:1">
+          <h3 style="margin-top:0">${p.name}</h3>
+          <p class="muted">Category: <strong>${p.category}</strong></p>
+          <p style="font-weight:800; margin-top:8px">${formatINR(p.price)} <span class="old" style="font-weight:600; color:var(--muted); margin-left:8px">${formatINR(p.old)}</span></p>
+          <p class="muted" style="margin-top:10px">Rating: ★ ${p.rating} • Freshly prepared.</p>
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <button class="btn" id="modal-add">Add to cart</button>
+            <button class="btn secondary" id="modal-close">Close</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("modal-add").onclick = () => { addToCart(p.id, 1); closeViewModal(); };
+      document.getElementById("modal-close").onclick = closeViewModal;
+    }
+    function closeViewModal(){ viewOverlay.style.display = "none"; viewOverlay.setAttribute("aria-hidden","true"); }
+
+    /*********
+     * CHECKOUT -> FAKE PAYMENT FLOW
+     *********/
+    document.getElementById("checkout").onclick = () => {
+      if(Object.keys(cart).length === 0){ showToast("Cart is empty"); return; }
+      checkoutOverlay.style.display = "flex";
+      checkoutOverlay.setAttribute("aria-hidden","false");
+      document.getElementById("checkout-total").textContent = formatINR(calcTotal());
+    };
+    document.getElementById("close-checkout").onclick = () => { checkoutOverlay.style.display = "none"; checkoutOverlay.setAttribute("aria-hidden","true"); };
+    document.getElementById("cancel-order").onclick = () => { checkoutOverlay.style.display = "none"; checkoutOverlay.setAttribute("aria-hidden","true"); };
+
+    document.getElementById("proceed-payment").onclick = (e) => {
+      e.preventDefault();
+      // validate fields lightly
+      const name = document.getElementById("cust-name").value.trim();
+      const email = document.getElementById("cust-email").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      if(!name || !email || !address){ showToast("Please fill required fields"); return; }
+
+      // open payment modal with amount
+      paymentOverlay.style.display = "flex";
+      paymentOverlay.setAttribute("aria-hidden","false");
+      document.getElementById("payment-amount").textContent = formatINR(calcTotal());
+      checkoutOverlay.style.display = "none";
+      checkoutOverlay.setAttribute("aria-hidden","true");
+    };
+
+    document.getElementById("close-payment").onclick = () => { paymentOverlay.style.display = "none"; paymentOverlay.setAttribute("aria-hidden","true"); };
+    document.getElementById("pay-cancel").onclick = () => { paymentOverlay.style.display = "none"; paymentOverlay.setAttribute("aria-hidden","true"); };
+
+    document.getElementById("pay-now").onclick = () => {
+      // simulate processing
+      const status = document.getElementById("payment-status");
+      status.innerHTML = '<div style="display:flex;gap:10px;align-items:center"><div class="loader"></div><div>Processing payment...</div></div>';
+      // simulate network/payment delay then success
+      setTimeout(() => {
+        status.innerHTML = '<div style="color:green;font-weight:700">Payment successful!</div>';
+        // generate order, clear cart
+        const order = {
+          id: 'ORD' + Date.now(),
+          items: cart,
+          total: calcTotal(),
+          placedAt: new Date().toISOString()
+        };
+        console.log("ORDER(FAKE):", order);
+        // show success modal after short delay
+        setTimeout(()=>{
+          paymentOverlay.style.display = "none";
+          paymentOverlay.setAttribute("aria-hidden","true");
+          document.getElementById("success-msg").textContent = Order ${order.id} placed — total ${formatINR(order.total)}. (Demo);
+          successOverlay.style.display = "flex";
+          successOverlay.setAttribute("aria-hidden","false");
+          // clear cart
+          cart = {};
+          saveCart();
+        }, 900);
+      }, 1400);
+    };
+
+    document.getElementById("success-ok").onclick = () => {
+      successOverlay.style.display = "none";
+      successOverlay.setAttribute("aria-hidden","true");
+      // reset forms
+      document.getElementById("checkout-form").reset();
+      document.getElementById("payment-status").innerHTML = "";
+    };
+
+    /*********
+     * HEADER BUTTONS
+     *********/
+    document.getElementById("open-cart").onclick = () => {
+      document.querySelector("aside.cart").scrollIntoView({behavior:"smooth"});
+      document.querySelector("aside.cart").animate([{ boxShadow: '0 0 0 rgba(0,0,0,0)' }, { boxShadow: '0 12px 40px rgba(0,0,0,0.06)' }, { boxShadow: '0 6px 18px rgba(0,0,0,0.04)'}], { duration: 300});
+    };
+    document.getElementById("continue-shopping").onclick = () => { window.scrollTo({top:0, behavior:"smooth"}); };
+    document.getElementById("clear-cart").onclick = () => { if(confirm("Clear cart?")){ cart = {}; saveCart(); } };
+    document.getElementById("shop-now").onclick = () => { document.getElementById("menu").scrollIntoView({behavior:"smooth"}); };
+    document.getElementById("view-categories").onclick = () => { document.getElementById("categories").scrollIntoView({behavior:"smooth"}); };
+
+    /* overlay click to close */
+    viewOverlay.onclick = (e) => { if(e.target === viewOverlay) closeViewModal(); };
+    checkoutOverlay.onclick = (e) => { if(e.target === checkoutOverlay){ checkoutOverlay.style.display = "none"; checkoutOverlay.setAttribute("aria-hidden","true"); } };
+    paymentOverlay.onclick = (e) => { if(e.target === paymentOverlay){ paymentOverlay.style.display = "none"; paymentOverlay.setAttribute("aria-hidden","true"); } };
+    successOverlay.onclick = (e) => { if(e.target === successOverlay){ successOverlay.style.display = "none"; successOverlay.setAttribute("aria-hidden","true"); } };
+
+    /*********
+     * CATEGORIES
+     *********/
+    document.querySelectorAll(".cat").forEach(el=>{
+      el.onclick = () => {
+        const cat = el.getAttribute("data-cat");
+        // clear search when selecting cat
+        searchInput.value = "";
+        sortSelect.value = "default";
+        renderProducts(cat === "all" ? null : cat);
+      };
+    });
+
+    /*********
+     * SEARCH & SORT EVENTS
+     *********/
+    searchInput.oninput = () => renderProducts();
+    sortSelect.onchange = () => renderProducts();
+
+    /*********
+     * TOAST (simple)
+     *********/
+    let toasts = null;
+    function showToast(msg){
+      if(!toasts){
+        toasts = document.createElement("div");
+        toasts.style.position = "fixed";
+        toasts.style.right = "14px";
+        toasts.style.bottom = "14px";
+        toasts.style.zIndex = 200;
+        document.body.appendChild(toasts);
+      }
+      const t = document.createElement("div");
+      t.textContent = msg;
+      t.style.background = "#111";
+      t.style.color = "#fff";
+      t.style.padding = "10px 14px";
+      t.style.borderRadius = "10px";
+      t.style.marginTop = "8px";
+      t.style.boxShadow = "0 8px 30px rgba(0,0,0,0.25)";
+      toasts.appendChild(t);
+      setTimeout(()=> t.style.opacity = "0.92", 10);
+      setTimeout(()=> { t.style.transform = "translateY(6px)"; }, 100);
+      setTimeout(()=> { t.style.opacity = "0"; t.style.transform = "translateY(14px)"; }, 2600);
+      setTimeout(()=> t.remove(), 3200);
+    }
+
+    /*********
+     * INIT
+     *********/
+    (function init(){
+      renderProducts();
+      renderCart();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Indoor Plants — Luxury Checkout (Cream + Olive)</title>
+<style>
+  /* --- Reset & base --- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg: #fbf8f2;
+    --panel: #ffffff;
+    --olive-600: #6b8a39;
+    --olive-500: #87a54a;
+    --olive-400: #b0c97a;
+    --olive-300: #d4e5b0;
+    --muted: #9aa3a1;
+    --danger: #e04f5f;
+    --glass: rgba(255,255,255,0.6);
+    --radius: 14px;
+    --accent-gold: #d4a574;
+    --accent-cream: #fef6e8;
+  }
+  body{
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, var(--bg), #f7f8f5);
+    color:#182;
+    padding:20px;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  /* --- Header with enhanced hover --- */
+  .header{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .3s ease}
+  .brand:hover{transform:translateY(-2px)}
+  .brand svg{
+    width:40px;height:40px;
+    filter:drop-shadow(0 6px 18px rgba(107,138,57,0.12));
+    transition:filter .4s ease, transform .4s ease;
+  }
+  .brand:hover svg{
+    filter:drop-shadow(0 10px 28px rgba(107,138,57,0.25));
+    transform:rotate(8deg) scale(1.05);
+  }
+  .brand h1{
+    font-size:20px;color:#274322;font-weight:800;letter-spacing:.2px;
+    transition:color .3s ease;
+  }
+  .brand:hover h1{color:var(--olive-600)}
+  
+  .cart-trigger{
+    display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;border:0;
+    background:linear-gradient(135deg,var(--olive-600),var(--olive-500));
+    color:#fff;font-weight:700;cursor:pointer;
+    box-shadow:0 8px 24px rgba(107,138,57,0.12);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;
+    overflow:hidden;
+  }
+  .cart-trigger::before{
+    content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition:left .6s ease;
+  }
+  .cart-trigger:hover::before{left:100%}
+  .cart-trigger:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:0 14px 36px rgba(107,138,57,0.22);
+  }
+  .cart-trigger:active{transform:translateY(-1px) scale(0.98)}
+  .cart-count{
+    background:var(--danger);width:22px;height:22px;border-radius:999px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:12px;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.1)}
+  }
+
+  /* --- Filters with dynamic hover --- */
+  .filters{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+  .filter-btn{
+    padding:8px 14px;border-radius:10px;
+    border:1.5px solid var(--olive-500);
+    background:var(--panel);color:var(--olive-600);
+    font-weight:700;cursor:pointer;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+  }
+  .filter-btn::after{
+    content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;
+    background:var(--olive-600);
+    transition:width .3s ease, left .3s ease;
+  }
+  .filter-btn:hover::after{width:80%;left:10%}
+  .filter-btn:hover{
+    transform:translateY(-2px);
+    border-color:var(--olive-600);
+    box-shadow:0 6px 16px rgba(107,138,57,0.12);
+  }
+  .filter-btn.active{
+    background:linear-gradient(90deg,var(--olive-500),var(--olive-600));
+    color:#fff;
+    box-shadow:0 10px 26px rgba(107,138,57,0.18);
+    border-color:transparent;
+  }
+  .filter-btn.active::after{display:none}
+
+  /* --- Grid --- */
+  .product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  
+  /* --- Enhanced Product Card with Premium Hover --- */
+  .product-card{
+    background:var(--panel);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(22,30,18,0.04);
+    transition:all .4s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column;
+    position:relative;
+  }
+  .product-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(135deg, rgba(107,138,57,0.03), rgba(135,165,74,0.06));
+    opacity:0;transition:opacity .4s ease;z-index:1;pointer-events:none;
+    border-radius:14px;
+  }
+  .product-card:hover::before{opacity:1}
+  .product-card:hover{
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 24px 56px rgba(22,30,18,0.12), 0 0 0 1px rgba(107,138,57,0.08);
+  }
+  
+  /* Image with overlay effect */
+  .product-card img{
+    width:100%;height:200px;object-fit:cover;
+    background:linear-gradient(135deg,var(--olive-400),var(--olive-500));
+    transition:transform .5s cubic-bezier(.4,0,.2,1), filter .4s ease;
+    position:relative;
+  }
+  .product-card:hover img{
+    transform:scale(1.08);
+    filter:brightness(1.05) contrast(1.05);
+  }
+  
+  /* Badge with animation */
+  .badge{
+    position:absolute;top:12px;right:12px;z-index:10;
+    background:linear-gradient(135deg, var(--accent-gold), #e0b885);
+    color:#fff;padding:6px 12px;border-radius:20px;
+    font-weight:800;font-size:11px;text-transform:uppercase;
+    box-shadow:0 4px 12px rgba(212,165,116,0.3);
+    animation:fadeInBounce .6s ease;
+  }
+  .badge.price-drop{
+    background:linear-gradient(135deg, var(--danger), #f06878);
+  }
+  @keyframes fadeInBounce{
+    0%{opacity:0;transform:translateY(-10px) scale(.8)}
+    60%{transform:translateY(2px) scale(1.05)}
+    100%{opacity:1;transform:translateY(0) scale(1)}
+  }
+  
+  .product-content{
+    padding:14px;display:flex;flex-direction:column;gap:8px;
+    text-align:center;flex:1;position:relative;z-index:2;
+    transition:padding .3s ease;
+  }
+  .product-card:hover .product-content{padding-top:18px}
+  
+  .rating{
+    color:var(--olive-600);font-weight:700;font-size:13px;
+    transition:transform .3s ease, color .3s ease;
+  }
+  .product-card:hover .rating{
+    transform:scale(1.05);
+    color:var(--accent-gold);
+  }
+  
+  .name{
+    font-weight:800;color:#223a2a;font-size:15px;
+    transition:color .3s ease, letter-spacing .3s ease;
+  }
+  .product-card:hover .name{
+    color:var(--olive-600);
+    letter-spacing:.3px;
+  }
+  
+  .tag{
+    display:inline-block;background:#f3f7ee;
+    color:var(--olive-600);padding:5px 8px;
+    border-radius:8px;font-weight:700;font-size:13px;margin:auto;
+    transition:all .3s ease;
+  }
+  .product-card:hover .tag{
+    background:linear-gradient(90deg, var(--olive-300), var(--accent-cream));
+    transform:scale(1.05);
+  }
+  
+  .price{
+    font-weight:900;color:#163a20;font-size:16px;
+    transition:color .3s ease, transform .3s ease;
+  }
+  .product-card:hover .price{
+    color:var(--olive-600);
+    transform:scale(1.05);
+  }
+  .old-price{
+    text-decoration:line-through;color:var(--muted);
+    font-weight:700;margin-left:8px;font-size:13px;
+  }
+  
+  /* Enhanced Add Button */
+  .add-btn{
+    border:0;padding:12px;
+    background:linear-gradient(135deg,var(--olive-500),var(--olive-600));
+    color:#fff;font-weight:900;cursor:pointer;
+    border-radius:0 0 14px 14px;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+    z-index:2;
+  }
+  .add-btn::before{
+    content:'';position:absolute;top:50%;left:50%;
+    width:0;height:0;border-radius:50%;
+    background:rgba(255,255,255,0.3);
+    transform:translate(-50%,-50%);
+    transition:width .5s ease, height .5s ease;
+  }
+  .add-btn:hover::before{width:300px;height:300px}
+  .add-btn:hover{
+    background:linear-gradient(135deg,var(--olive-600),var(--olive-500));
+    letter-spacing:1px;
+    box-shadow:0 6px 20px rgba(107,138,57,0.25);
+  }
+  .add-btn:active{transform:scale(0.96)}
+
+  /* --- Sidebar (multi-step container) --- */
+  .cart-sidebar{
+    position:fixed;right:-440px;top:0;width:440px;height:100vh;
+    background:linear-gradient(180deg,#ffffff,#fbfff8);
+    box-shadow:-24px 40px 80px rgba(15,30,14,0.10);
+    transition:right .28s cubic-bezier(.2,.9,.2,1);
+    z-index:1400;border-left:1px solid rgba(0,0,0,0.03);
+    display:flex;flex-direction:column;
+    border-top-left-radius:18px;border-bottom-left-radius:18px;
+    overflow:hidden;
+  }
+  .cart-sidebar.open{right:12px}
+  
+  .cart-top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px;border-bottom:1px solid rgba(0,0,0,0.04);
+    background:linear-gradient(90deg, var(--accent-cream), #ffffff);
+  }
+  .cart-top h2{font-size:18px;color:var(--olive-600);font-weight:900}
+  .cart-close{
+    border:0;background:transparent;font-size:22px;
+    cursor:pointer;color:#333;
+    transition:transform .3s ease, color .3s ease;
+  }
+  .cart-close:hover{
+    transform:rotate(90deg) scale(1.1);
+    color:var(--danger);
+  }
+
+  .cart-body{padding:14px;flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px}
+
+  .checkout-steps{display:flex;gap:8px;padding-bottom:8px}
+  .step-pill{
+    flex:1;padding:8px;border-radius:10px;
+    background:#f7fbf6;text-align:center;
+    font-weight:800;color:var(--muted);font-size:13px;
+    transition:all .3s ease;position:relative;overflow:hidden;
+  }
+  .step-pill::before{
+    content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;
+    background:var(--olive-600);transform:scaleX(0);
+    transition:transform .3s ease;
+  }
+  .step-pill.active{
+    background:linear-gradient(90deg,var(--olive-500),var(--olive-600));
+    color:#fff;
+    box-shadow:0 10px 28px rgba(107,138,57,0.10);
+  }
+  .step-pill.active::before{transform:scaleX(1)}
+
+  /* Cart list items with hover */
+  .cart-list{display:flex;flex-direction:column;gap:10px}
+  .cart-item{
+    display:flex;gap:12px;align-items:center;padding:10px;
+    border-radius:10px;
+    background:linear-gradient(180deg,#fff,#fbfff8);
+    box-shadow:0 8px 20px rgba(12,20,12,0.03);
+    transition:all .3s ease;
+  }
+  .cart-item:hover{
+    transform:translateX(-4px);
+    box-shadow:0 12px 30px rgba(12,20,12,0.08);
+    background:linear-gradient(180deg,#ffffff,#f8fff8);
+  }
+  .cart-item img{
+    width:72px;height:72px;object-fit:cover;border-radius:8px;
+    transition:transform .3s ease;
+  }
+  .cart-item:hover img{transform:scale(1.05)}
+  
+  .meta{flex:1;display:flex;flex-direction:column;gap:6px}
+  .title{font-weight:800;color:#234b2a;transition:color .3s ease}
+  .cart-item:hover .title{color:var(--olive-600)}
+  .meta-sub{color:var(--muted);font-weight:700}
+  
+  .cart-actions{display:flex;gap:8px;align-items:center;margin-top:6px}
+  .qty-btn{
+    padding:6px 10px;border-radius:8px;
+    border:1px solid #eef7ee;background:#fff;
+    cursor:pointer;font-weight:800;
+    transition:all .3s ease;
+  }
+  .qty-btn:hover{
+    background:var(--olive-400);
+    border-color:var(--olive-500);
+    color:#fff;
+    transform:scale(1.1);
+  }
+  .remove-small{
+    padding:6px 10px;border-radius:8px;
+    background:var(--danger);color:#fff;border:0;
+    cursor:pointer;font-weight:800;
+    transition:all .3s ease;
+  }
+  .remove-small:hover{
+    background:#c73e4f;
+    transform:scale(1.05);
+    box-shadow:0 4px 12px rgba(224,79,95,0.3);
+  }
+
+  .subtotal{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px;border-radius:10px;
+    background:linear-gradient(135deg, #f2faf2, var(--accent-cream));
+    font-weight:900;color:#163a20;
+    box-shadow:0 4px 12px rgba(107,138,57,0.06);
+  }
+
+  .primary-cta{
+    margin-top:8px;padding:12px;border-radius:12px;border:0;
+    background:linear-gradient(135deg,var(--olive-500),var(--olive-600));
+    color:#fff;font-weight:900;cursor:pointer;
+    box-shadow:0 12px 36px rgba(107,138,57,0.10);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+  }
+  .primary-cta::before{
+    content:'';position:absolute;top:0;left:-100%;
+    width:100%;height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition:left .5s ease;
+  }
+  .primary-cta:hover::before{left:100%}
+  .primary-cta:hover{
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 16px 48px rgba(107,138,57,0.2);
+  }
+
+  /* Payment options */
+  .payment-grid{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .pay-option{
+    display:flex;align-items:center;gap:12px;padding:12px;
+    border-radius:10px;border:1px solid #eef7ee;
+    background:#fff;cursor:pointer;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+  }
+  .pay-option:hover{
+    transform:translateX(4px);
+    box-shadow:0 8px 20px rgba(107,138,57,0.08);
+    border-color:var(--olive-400);
+  }
+  .pay-option .icon{font-size:20px;transition:transform .3s ease}
+  .pay-option:hover .icon{transform:scale(1.15) rotate(5deg)}
+  .pay-option.selected{
+    background:linear-gradient(90deg, rgba(135,165,74,0.12), rgba(107,138,57,0.06));
+    box-shadow:0 8px 18px rgba(107,138,57,0.12);
+    border-color:var(--olive-500);
+  }
+
+  /* Form fields */
+  .field{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .field label{font-weight:800;color:#3e5631}
+  .field input,.field textarea{
+    padding:10px 12px;border-radius:10px;
+    border:1px solid #e9f3e8;font-size:14px;
+    transition:all .3s ease;
+  }
+  .field input:focus,.field textarea:focus{
+    outline:none;
+    border-color:var(--olive-500);
+    box-shadow:0 4px 12px rgba(107,138,57,0.08);
+    transform:translateY(-1px);
+  }
+
+  /* Modal buttons */
+  .modal-btn{
+    padding:10px 14px;border-radius:10px;border:0;
+    font-weight:800;cursor:pointer;
+    transition:all .3s ease;
+  }
+  .modal-btn.cancel{
+    background:#f5f5f5;color:#666;
+  }
+  .modal-btn.cancel:hover{
+    background:#e8e8e8;
+    transform:scale(1.02);
+  }
+  .modal-btn.confirm{
+    background:linear-gradient(135deg,var(--olive-500),var(--olive-600));
+    color:#fff;
+  }
+  .modal-btn.confirm:hover{
+    transform:scale(1.05);
+    box-shadow:0 8px 20px rgba(107,138,57,0.15);
+  }
+
+  /* Success */
+  .success-wrap{
+    display:flex;flex-direction:column;align-items:center;
+    gap:10px;padding:6px;
+  }
+  .success-title{
+    font-weight:900;color:var(--olive-600);font-size:18px;
+    animation:fadeInScale .5s ease;
+  }
+  @keyframes fadeInScale{
+    0%{opacity:0;transform:scale(.9)}
+    100%{opacity:1;transform:scale(1)}
+  }
+  .order-details{
+    width:100%;text-align:left;margin-top:8px;
+    border-radius:10px;
+    background:linear-gradient(135deg, #f6fff8, var(--accent-cream));
+    padding:12px;font-size:14px;
+    box-shadow:0 6px 18px rgba(107,138,57,0.06);
+  }
+  .order-details p{margin-bottom:8px;color:#223}
+  .back-shop{
+    margin-top:10px;padding:10px 12px;border-radius:10px;border:0;
+    background:linear-gradient(135deg,var(--olive-500),var(--olive-600));
+    color:#fff;font-weight:900;cursor:pointer;
+    transition:all .3s ease;
+  }
+  .back-shop:hover{
+    transform:scale(1.05);
+    box-shadow:0 10px 28px rgba(107,138,57,0.2);
+  }
+
+  /* notification & confetti */
+  #notification{
+    position:fixed;top:20px;right:20px;z-index:1500;
+    display:none;padding:10px 12px;border-radius:10px;
+    background:linear-gradient(90deg,var(--olive-500),var(--olive-600));
+    color:#fff;font-weight:800;
+    box-shadow:0 8px 24px rgba(107,138,57,0.2);
+    animation:slideInNotif .4s ease;
+  }
+  @keyframes slideInNotif{
+    0%{opacity:0;transform:translateX(30px)}
+    100%{opacity:1;transform:translateX(0)}
+  }
+  .confetti-piece{
+    position:absolute;pointer-events:none;z-index:9999;
+    border-radius:2px;opacity:0.95;
+  }
+
+  /* responsive */
+  @media(max-width:600px){
+    .cart-sidebar{width:100%;right:-100%;border-radius:0}
+    .cart-sidebar.open{right:0}
+    .product-card img{height:180px}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C8 2 6 5 6 8c0 4 4 6 6 12 2-6 6-8 6-12 0-3-2-6-6-6z" fill="#6b8a39"/>
+      </svg>
+      <h1>Indoor Plant Bundles</h1>
+    </div>
+
+    <button class="cart-trigger" id="openCartBtn">🛒 Cart <span style="width:8px"></span><span class="cart-count" id="cartCount">0</span></button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="applyFilter('all', this)">All Products</button>
+    <button class="filter-btn" onclick="applyFilter('Modern Decor', this)">Modern Decor</button>
+    <button class="filter-btn" onclick="applyFilter('Air Purifying', this)">Air Purifying</button>
+    <button class="filter-btn" onclick="applyFilter('sale', this)">On Sale</button>
+  </div>
+
+  <!-- Products -->
+  <div class="product-grid" id="productGrid"></div>
+
+  <!-- Cart Sidebar (multi-step) -->
+  <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+    <div class="cart-top">
+      <h2>Your Cart</h2>
+      <button class="cart-close" id="closeCartBtn">×</button>
+    </div>
+
+    <div class="cart-body">
+      <div class="checkout-steps" id="checkoutSteps">
+        <div class="step-pill" id="pillCart">Cart</div>
+        <div class="step-pill" id="pillPayment">Payment</div>
+        <div class="step-pill" id="pillAddress">Address</div>
+        <div class="step-pill" id="pillSuccess">Success</div>
+      </div>
+
+      <div id="stepContent"></div>
+    </div>
+  </aside>
+
+  <!-- Notification -->
+  <div id="notification"></div>
+
+<script>
+/* ================= DATA ================= */
+const PRODUCTS = [
+{id:1,name:"The Clean Air Bundle",tag:"Modern Decor",price:1499,oldPrice:null,rating:5,reviews:6,badge:"Sale",sold:false,img:"IMG/i1.webp"},
+{id:2,name:"The Pretty Bundle",tag:"Modern Decor",price:1699,oldPrice:null,rating:5,reviews:9,badge:"",sold:true,img:"IMG/i2.webp"},
+{id:3,name:"The Pretty Bundle",tag:"Modern Decor",price:1299,oldPrice:null,rating:5,reviews:9,badge:"",sold:true,img:"IMG/i3.webp"},
+{id:4,name:"Philodendron Oxycardium",tag:"Modern Decor",price:1599,oldPrice:null,rating:5,reviews:9,badge:"",sold:true,img:"IMG/i4.webp"},
+{id:5,name:"Golden with Hanging Pot",tag:"Air Purifying",price:2999,oldPrice:1499,rating:4.9,reviews:36,badge:"Price Drop!",sold:false,img:"IMG/i5.webp"},
+{id:6,name:"Aralia Variegated Mini",tag:"Air Purifying",price:1299,oldPrice:null,rating:4.4,reviews:9,badge:"",sold:true,img:"IMG/i6.webp"},
+{id:7,name:"Ficus Lyrata Bambino -XL",tag:"Modern Decor",price:1999,oldPrice:null,rating:4.8,reviews:5,badge:"Sale",sold:false,img:"IMG/i7.webp"},
+{id:8,name:"Philodendron Ceylon Golden",tag:"Air Purifying",price:1499,oldPrice:null,rating:4.7,reviews:8,badge:"",sold:false,img:"IMG/i8.webp"},
+{id:9,name:"Urban Jungle Indoor Plant",tag:"Modern Decor",price:1899,oldPrice:1099,rating:4.6,reviews:12,badge:"Price Drop!",sold:false,img:"IMG/i9.webp"},
+{id:10,name:"Dieffenbachia Cheetah Plant",tag:"Air Purifying",price:1799,oldPrice:null,rating:5,reviews:14,badge:"",sold:true,img:"IMG/i10.webp"},
+{id:11,name:"Philodendron Melinonii Gold",tag:"Modern Decor",price:1599,oldPrice:null,rating:4.8,reviews:7,badge:"Sale",sold:false,img:"IMG/i11.webp"},
+{id:12,name:"ZZ Black Plant - XL",tag:"Air Purifying",price:1399,oldPrice:null,rating:4.9,reviews:18,badge:"",sold:false,img:"IMG/i12.webp"},
+{id:13,name:"Croton Petra XL",tag:"Modern Decor",price:1199,oldPrice:null,rating:4.7,reviews:5,badge:"Sale",sold:false,img:"IMG/i13.webp"},
+{id:14,name:"Thai Constellation XL",tag:"Air Purifying",price:1699,oldPrice:null,rating:4.9,reviews:11,badge:"",sold:false,img:"IMG/i14.webp"},
+{id:15,name:"Dracena Lemon Lime ",tag:"Modern Decor",price:1299,oldPrice:null,rating:4.6,reviews:9,badge:"",sold:true,img:"IMG/i15.webp"},
+{id:16,name:"Office Air Purifier",tag:"Air Purifying",price:1799,oldPrice:null,rating:4.7,reviews:13,badge:"Price Drop!",sold:false,img:"IMG/i16.webp"},
+{id:17,name:"Luxury Indoor Pack",tag:"Modern Decor",price:1599,oldPrice:null,rating:5,reviews:20,badge:"",sold:false,img:"IMG/i17.webp"},
+{id:18,name:"Modern Plant Combo",tag:"Air Purifying",price:1899,oldPrice:null,rating:4.8,reviews:15,badge:"Sale",sold:false,img:"IMG/i18.webp"},
+
+
+  ];
+
+/* ================ STATE ================ */
+let cart = [];
+let uiStep = 'cart';
+let selectedPayment = '';
+let lastOrder = null;
+
+/* ================ REFS ================ */
+const productGrid = document.getElementById('productGrid');
+const cartSidebar = document.getElementById('cartSidebar');
+const stepContent = document.getElementById('stepContent');
+const cartCount = document.getElementById('cartCount');
+const notificationEl = document.getElementById('notification');
+const pillEls = {
+  cart: document.getElementById('pillCart'),
+  payment: document.getElementById('pillPayment'),
+  address: document.getElementById('pillAddress'),
+  success: document.getElementById('pillSuccess')
+};
+
+/* ================ RENDER PRODUCTS ================ */
+function escapeHtml(s){ if(s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderProducts(list = PRODUCTS){
+  productGrid.innerHTML = '';
+  list.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'product-card';
+    el.innerHTML = `
+      ${p.badge ? `<div class="badge ${p.badge==='Price Drop!' ? 'price-drop' : ''}">${escapeHtml(p.badge)}</div>` : ''}
+      <img src="${p.img}" alt="${escapeHtml(p.name)}">
+      <div class="product-content">
+        <div class="rating">⭐ ${p.rating} (${p.reviews || 0})</div>
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="tag">${escapeHtml(p.tag)}</div>
+        <div style="margin-top:auto">
+          <div class="price">₹${p.price}${p.oldPrice?` <span class="old-price">₹${p.oldPrice}</span>` : ''}</div>
+        </div>
+      </div>
+      <button class="add-btn" ${p.sold ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="addToCart(${p.id})">${p.sold ? 'SOLD' : 'ADD TO CART'}</button>
+    `;
+    productGrid.appendChild(el);
+  });
+}
+renderProducts();
+
+/* ================ FILTER ================ */
+function applyFilter(tag, btnEl){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+  if(tag === 'all') renderProducts(PRODUCTS);
+  else if(tag === 'sale') renderProducts(PRODUCTS.filter(p => p.badge));
+  else renderProducts(PRODUCTS.filter(p => p.tag === tag));
+}
+
+/* ================ CART HELPERS ================ */
+function addToCart(productId){
+  const entry = cart.find(c => c.productId === productId);
+  if(entry) entry.qty++;
+  else cart.push({productId, qty:1});
+  updateCartCount();
+  showNotification('Added to cart');
+}
+function updateCartCount(){ cartCount.innerText = cart.reduce((s,i)=>s + i.qty, 0); }
+function getCartDetailed(){ return cart.map(ci => ({ ...PRODUCTS.find(p=>p.id===ci.productId), qty:ci.qty })); }
+function calcTotal(){ return getCartDetailed().reduce((s,i)=>s + i.price * i.qty, 0); }
+
+/* ================ SIDEBAR & STEPS ================ */
+document.getElementById('openCartBtn').addEventListener('click', ()=>{ openSidebar(); setStep('cart'); });
+document.getElementById('closeCartBtn').addEventListener('click', () => { closeSidebar(); });
+
+function openSidebar(){ cartSidebar.classList.add('open'); cartSidebar.setAttribute('aria-hidden','false'); renderStep(); updateCartCount(); }
+function closeSidebar(){ cartSidebar.classList.remove('open'); cartSidebar.setAttribute('aria-hidden','true'); }
+
+/* step controls */
+function setStep(step){
+  uiStep = step;
+  for(const k in pillEls) pillEls[k].classList.toggle('active', k === step);
+  renderStep();
+}
+function renderStep(){
+  stepContent.innerHTML = '';
+  if(uiStep === 'cart') renderCartStep();
+  else if(uiStep === 'payment') renderPaymentStep();
+  else if(uiStep === 'address') renderAddressStep();
+  else if(uiStep === 'success') renderSuccessStep();
+}
+
+/* ================ CART STEP ================ */
+function renderCartStep(){
+  const wrapper = document.createElement('div');
+
+  const items = getCartDetailed();
+  const list = document.createElement('div');
+  list.className = 'cart-list';
+  if(items.length === 0){
+    list.innerHTML = `<div style="color:var(--muted);font-weight:700;text-align:center;padding:20px">Your cart is empty — add some green!</div>`;
+  } else {
+    items.forEach(it => {
+      const row = document.createElement('div');
+      row.className = 'cart-item';
+      row.innerHTML = `
+        <img src="${it.img}" alt="${escapeHtml(it.name)}">
+        <div class="meta">
+          <div class="title">${escapeHtml(it.name)}</div>
+          <div class="meta-sub">₹${it.price} · ${it.rating}★</div>
+          <div class="cart-actions">
+            <button class="qty-btn" onclick="changeQty(${it.id}, -1)">−</button>
+            <div style="padding:6px 8px;border-radius:8px;background:#f2fff4;border:1px solid rgba(0,0,0,0.03);font-weight:800">${it.qty}</div>
+            <button class="qty-btn" onclick="changeQty(${it.id}, 1)">+</button>
+            <button class="remove-small" onclick="removeFromCart(${it.id})">Remove</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  const subtotal = document.createElement('div');
+  subtotal.className = 'subtotal';
+  subtotal.innerHTML = `<div style="color:var(--muted)">Subtotal</div><div>₹${calcTotal()}</div>`;
+
+  const ctaWrap = document.createElement('div');
+  ctaWrap.innerHTML = `<button class="primary-cta" ${items.length===0 ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="proceedToPayment()">Proceed to Checkout</button>`;
+
+  wrapper.appendChild(list);
+  wrapper.appendChild(subtotal);
+  wrapper.appendChild(ctaWrap);
+  stepContent.appendChild(wrapper);
+}
+
+/* CART actions */
+function changeQty(productId, delta){
+  const entry = cart.find(c=>c.productId===productId);
+  if(!entry) return;
+  entry.qty += delta;
+  if(entry.qty <= 0) cart = cart.filter(c => c.productId !== productId);
+  updateCartCount();
+  renderStep();
+}
+function removeFromCart(productId){
+  cart = cart.filter(c => c.productId !== productId);
+  updateCartCount();
+  renderStep();
+}
+function proceedToPayment(){
+  if(cart.length === 0){ showNotification('Cart empty'); return; }
+  selectedPayment = '';
+  setStep('payment');
+}
+
+/* ================ PAYMENT STEP ================ */
+function renderPaymentStep(){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div style="font-weight:800;color:var(--muted)">Select Payment Method</div>`;
+  const options = document.createElement('div');
+  options.className = 'payment-grid';
+
+  const opts = [
+    {id:'upi', icon:'📱', label:'UPI (Google Pay / PhonePe)'},
+    {id:'card', icon:'💳', label:'Card (Credit/Debit)'},
+    {id:'cod', icon:'💵', label:'Cash on Delivery'}
+  ];
+  opts.forEach(o=>{
+    const el = document.createElement('div');
+    el.className = 'pay-option' + (selectedPayment === o.id ? ' selected' : '');
+    el.onclick = ()=>{ selectedPayment = o.id; renderStep(); }
+    el.innerHTML = `<div class="icon">${o.icon}</div><div style="font-weight:800">${o.label}</div>`;
+    options.appendChild(el);
+  });
+
+  const nav = document.createElement('div');
+  nav.style.marginTop = '12px';
+  nav.innerHTML = `
+    <div style="display:flex;gap:8px">
+      <button class="modal-btn cancel" onclick="setStep('cart')" style="flex:1">Back</button>
+      <button class="modal-btn confirm" onclick="goToAddress()" style="flex:1">Continue</button>
+    </div>
+    <div style="margin-top:10px;color:var(--muted);font-weight:700">Selected: <span style="font-weight:900">${selectedPayment || '—'}</span></div>
+  `;
+
+  stepContent.appendChild(wrap);
+  stepContent.appendChild(options);
+  stepContent.appendChild(nav);
+}
+function goToAddress(){
+  if(!selectedPayment){ showNotification('Please select payment method'); return; }
+  setStep('address');
+}
+
+/* ================ ADDRESS STEP ================ */
+function renderAddressStep(){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div style="font-weight:800;color:var(--muted)">Delivery Address</div>
+    <div class="field"><label>Name</label><input id="inputName" placeholder="Full name"></div>
+    <div class="field"><label>Phone</label><input id="inputPhone" placeholder="Mobile number"></div>
+    <div class="field"><label>Address</label><textarea id="inputAddress" placeholder="House, street, area"></textarea></div>
+    <div class="field"><label>City</label><input id="inputCity" placeholder="City"></div>
+
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="modal-btn cancel" onclick="setStep('payment')" style="flex:1">Back</button>
+      <button class="modal-btn confirm" onclick="placeOrder()" style="flex:1">Place Order</button>
+    </div>
+  `;
+  stepContent.appendChild(wrap);
+}
+
+/* Place order */
+function placeOrder(){
+  const name = document.getElementById('inputName').value.trim();
+  const phone = document.getElementById('inputPhone').value.trim();
+  const address = document.getElementById('inputAddress').value.trim();
+  const city = document.getElementById('inputCity').value.trim();
+  if(!name || !phone || !city){ showNotification('Please fill Name, Phone and City'); return; }
+
+  lastOrder = {
+    name, phone, address, city,
+    items: getCartDetailed(),
+    total: calcTotal(),
+    payment: selectedPayment || '—',
+    deliveryDate: (() => { const d = new Date(); d.setDate(d.getDate()+5); return d.toDateString(); })()
+  };
+
+  setStep('success');
+  setTimeout(()=>launchConfettiInPanel(), 180);
+}
+
+/* ================ SUCCESS STEP ================ */
+function renderSuccessStep(){
+  const o = lastOrder || {name:'', phone:'', address:'', city:'', items:[], total:0, payment:'', deliveryDate:''};
+  const wrap = document.createElement('div');
+  wrap.className = 'success-wrap';
+  wrap.innerHTML = `
+    <div style="width:100%;text-align:center">
+      <div class="success-title">Order Placed — Thank you! 🎉</div>
+      <div style="color:var(--muted);font-weight:800">${escapeHtml(o.name)}</div>
+    </div>
+
+    <div class="order-details">
+      <p><strong>Payment:</strong> ${escapeHtml(o.payment)}</p>
+      <p><strong>Contact:</strong> ${escapeHtml(o.phone)}</p>
+      <p><strong>Address:</strong> ${escapeHtml(o.address)}, ${escapeHtml(o.city)}</p>
+      <p><strong>Expected Delivery:</strong> ${escapeHtml(o.deliveryDate)}</p>
+      <hr style="border:none;border-top:1px solid #edf7ea;margin:8px 0">
+      <div><strong>Items:</strong></div>
+      ${o.items.map(it=>`<div style="display:flex;justify-content:space-between;margin-top:6px"><div>${escapeHtml(it.name)} x ${it.qty}</div><div>₹${it.price * it.qty}</div></div>`).join('')}
+      <hr style="border:none;border-top:1px solid #edf7ea;margin:8px 0">
+      <div style="display:flex;justify-content:space-between;font-weight:900"><div>Total</div><div>₹${o.total}</div></div>
+    </div>
+
+    <button class="back-shop" onclick="finishOrder()">Back to Shop</button>
+  `;
+  stepContent.appendChild(wrap);
+}
+
+/* finish: clear cart and close */
+function finishOrder(){
+  cart = [];
+  selectedPayment = '';
+  lastOrder = null;
+  updateCartCount();
+  closeSidebar();
+  setStep('cart');
+  showNotification('Order completed — thank you!');
+}
+
+/* ================ CONFETTI INSIDE PANEL ================ */
+function launchConfettiInPanel(){
+  const panel = cartSidebar.querySelector('.success-wrap');
+  if(!panel) return;
+  for(let i=0;i<70;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const w = 6 + Math.random()*9;
+    const h = 6 + Math.random()*12;
+    piece.style.width = w + 'px';
+    piece.style.height = h + 'px';
+    piece.style.left = (10 + Math.random()*80) + '%';
+    piece.style.top = ( -10 + Math.random()*10 ) + '%';
+    piece.style.background = `hsl(${Math.random()*360} 70% 50%)`;
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    panel.appendChild(piece);
+
+    const fall = 160 + Math.random()*220;
+    piece.animate([
+      { transform: `translateY(0px) rotate(${Math.random()*360}deg)`, opacity:1 },
+      { transform: `translateY(${fall}px) rotate(${Math.random()*1080}deg)`, opacity:0.95 }
+    ], {
+      duration: 1000 + Math.random()*1600,
+      easing: 'cubic-bezier(.2,.8,.2,1)',
+      iterations: 1,
+      fill: 'forwards'
+    });
+    setTimeout(()=> piece.remove(), 2600 + Math.random()*1200);
+  }
+}
+
+/* ================ NOTIFICATION ================ */
+function showNotification(msg){
+  notificationEl.innerText = msg;
+  notificationEl.style.display = 'block';
+  setTimeout(()=> { notificationEl.style.display = 'none'; }, 1600);
+}
+
+/* ================ INIT / GLOBALS ================ */
+window.applyFilter = applyFilter;
+window.addToCart = addToCart;
+window.openSidebar = openSidebar;
+window.closeSidebar = closeSidebar;
+window.changeQty = changeQty;
+window.removeFromCart = removeFromCart;
+window.proceedToPayment = proceedToPayment;
+window.finishOrder = finishOrder;
+window.setStep = setStep;
+window.goToAddress = goToAddress;
+window.placeOrder = placeOrder;
+
+updateCartCount();
+renderStep();
+</script>
+</body>
+</html>
+
+
+https://www.sejda.com/pdf-editor

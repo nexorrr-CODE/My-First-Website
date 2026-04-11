@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Shop Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200px 0;
+      }
+      100% {
+        background-position: calc(200px + 100%) 0;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes success {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(-45deg, #f0f8f0, #e8f5e8, #f4f8f4, #ecf5ec);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2e7d32, #388e3c, #4caf50);
+      background-size: 200% 200%;
+      animation: gradientMove 8s ease infinite;
+      color: #fff;
+      padding: 20px 15px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    header img {
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    header img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    .controls input, .controls select, .controls button {
+      padding: 12px 16px;
+      font-size: 14px;
+      border: 2px solid transparent;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .controls input:focus, .controls select:focus {
+      outline: none;
+      border-color: #4caf50;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .controls input {
+      background: linear-gradient(45deg, rgba(255,255,255,0.9), rgba(248,255,248,0.9));
+      position: relative;
+    }
+
+    .controls input::placeholder {
+      color: #666;
+      transition: color 0.3s ease;
+    }
+
+    .controls input:focus::placeholder {
+      color: #999;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(76,175,80,0.1), rgba(129,199,132,0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: rgba(76, 175, 80, 0.3);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 15px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: brightness(1) saturate(1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .card:hover img {
+      transform: scale(1.05) rotate(2deg);
+      filter: brightness(1.1) saturate(1.2);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+      margin: 15px 0 10px;
+      font-weight: 600;
+      color: #2e7d32;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .card:hover h3 {
+      color: #1b5e20;
+      transform: scale(1.05);
+    }
+
+    .price {
+      font-weight: 700;
+      color: #2e7d32;
+      font-size: 20px;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .card:hover .price {
+      color: #1b5e20;
+      transform: scale(1.1);
+      animation: pulse 0.6s ease;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #2e7d32, #4caf50);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(45deg, #1b5e20, #2e7d32);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #ffffff, #f8fffe);
+      margin: 2% auto;
+      padding: 0;
+      border: none;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 95vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      z-index: 10;
+      cursor: pointer;
+      background: rgba(255,255,255,0.8);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close:hover {
+      color: #000;
+      background: rgba(255,255,255,1);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      display: flex;
+      gap: 30px;
+      padding: 30px;
+      flex-wrap: wrap;
+    }
+
+    .modal-left {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .modal-right {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .modal-product-img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .modal-product-img:hover {
+      transform: scale(1.02);
+    }
+
+    .product-details {
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .product-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .price-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .old-price {
+      font-size: 18px;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .new-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2e7d32;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .discount {
+      background: linear-gradient(45deg, #ff4444, #ff6666);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .buy-now-btn {
+      background: linear-gradient(45deg, #ff6b35, #ff8c42);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .buy-now-btn:hover {
+      background: linear-gradient(45deg, #ff5722, #ff7043);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 107, 53, 0.5);
+    }
+
+    .payment-section {
+      display: none;
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+
+    .payment-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .payment-option:hover {
+      border-color: #4caf50;
+      background: rgba(76, 175, 80, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .payment-option.selected {
+      border-color: #4caf50;
+      background: rgba(76, 175, 80, 0.1);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+    }
+
+    .payment-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+    }
+
+    .payment-icon {
+      font-size: 24px;
+    }
+
+    .total-section {
+      background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 2px solid #4caf50;
+    }
+
+    .total-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2e7d32;
+      text-align: center;
+    }
+
+    .process-payment-btn {
+      background: linear-gradient(45deg, #4caf50, #66bb6a);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .process-payment-btn:hover {
+      background: linear-gradient(45deg, #388e3c, #4caf50);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.5);
+    }
+
+    .process-payment-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading-section {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid #4caf50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .loading-text {
+      font-size: 18px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .success-section {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .success-icon {
+      font-size: 80px;
+      color: #4caf50;
+      margin-bottom: 20px;
+      animation: success 0.6s ease;
+    }
+
+    .success-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 15px;
+    }
+
+    .success-message {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .order-details {
+      background: rgba(255,255,255,0.9);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border: 2px solid #4caf50;
+    }
+
+    .order-id, .delivery-date {
+      font-size: 16px;
+      margin: 10px 0;
+      font-weight: 600;
+      color: #2e7d32;
+    }
+
+    /* Animation delay for cards */
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+    .card:nth-child(5) { animation-delay: 0.5s; }
+    .card:nth-child(6) { animation-delay: 0.6s; }
+    .card:nth-child(7) { animation-delay: 0.7s; }
+    .card:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+      
+      .controls {
+        padding: 15px;
+        gap: 10px;
+      }
+      
+      .controls input, .controls select {
+        font-size: 16px;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 1% auto;
+      }
+
+      .modal-body {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .modal-left, .modal-right {
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+      }
+
+      .product-name {
+        font-size: 24px;
+      }
+
+      .new-price {
+        font-size: 28px;
+      }
+    }
+
+    /* Loading animation for new cards */
+    .card.loading {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    /* Floating effect for some elements */
+    .card:nth-child(3n) {
+      animation: fadeInUp 0.6s ease forwards, float 6s ease-in-out infinite;
+      animation-delay: 0.3s, 2s;
+    }
+
+    /* Scroll animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="IMG/p91.webp" alt="Plant Shop Logo">
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Search plants...">
+    <select id="sort">
+      <option value="">🔄 Sort by</option>
+      <option value="low">💰 Price: Low to High</option>
+      <option value="high">💎 Price: High to Low</option>
+    </select>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+
+  <!-- Modal -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-body">
+        <div class="modal-left">
+          <img id="modalProductImg" class="modal-product-img" src="" alt="">
+        </div>
+        <div class="modal-right">
+          <div class="product-details" id="productDetailsSection">
+            <h2 id="modalProductName" class="product-name"></h2>
+            <div class="price-section">
+              <span id="modalOldPrice" class="old-price"></span>
+              <span id="modalNewPrice" class="new-price"></span>
+              <span class="discount">20% OFF</span>
+            </div>
+            <button class="buy-now-btn" onclick="showPaymentOptions()">Buy Now</button>
+          </div>
+
+          <div class="payment-section" id="paymentSection">
+            <h3 class="payment-title">Select Payment Method</h3>
+            <div class="payment-options">
+              <div class="payment-option" onclick="selectPayment('debit')">
+                <input type="radio" name="payment" value="debit" id="debit">
+                <span class="payment-icon">💳</span>
+                <label for="debit">Debit Card</label>
+              </div>
+              <div class="payment-option" onclick="selectPayment('credit')">
+                <input type="radio" name="payment" value="credit" id="credit">
+                <span class="payment-icon">💎</span>
+                <label for="credit">Credit Card</label>
+              </div>
+              <div class="payment-option" onclick="selectPayment('cod')">
+                <input type="radio" name="payment" value="cod" id="cod">
+                <span class="payment-icon">💵</span>
+                <label for="cod">Cash on Delivery</label>
+              </div>
+            </div>
+            
+            <div class="total-section">
+              <div class="total-price" id="totalPrice">Total: ₹0</div>
+            </div>
+            
+            <button class="process-payment-btn" id="processPaymentBtn" onclick="processPayment()" disabled>
+              Process to Pay
+            </button>
+          </div>
+
+          <div class="loading-section" id="loadingSection">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing your payment...</div>
+          </div>
+
+          <div class="success-section" id="successSection">
+            <div class="success-icon">🎉</div>
+            <h3 class="success-title">Congratulations!</h3>
+            <p class="success-message">Your order has been completed successfully!</p>
+            <div class="order-details">
+              <div class="order-id" id="orderIdDisplay">Order ID: #PLT-2023-001234</div>
+              <div class="delivery-date" id="deliveryDateDisplay">Expected Delivery: September 28, 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      {id:1, name:"Peace Lily", price:499, img:"IMG/p59.webp"},
+      {id:2, name:"Aloe Vera", price:299, img:"IMG/p60.webp"},
+      {id:3, name:"Lucky Bamboo", price:699, img:"IMG/p61.webp"},
+      {id:4, name:"Money Plant", price:399, img:"IMG/p62.webp"},
+      {id:5, name:"Areca plant", price:499, img:"IMG/p63.webp"},
+      {id:6, name:"Delicosio plant", price:499, img:"IMG/p64.webp"},
+      {id:7, name:"Fiddel leaf", price:499, img:"IMG/p65.webp"},
+      {id:8, name:"Paradise plant", price:499, img:"IMG/p66.webp"},
+      {id:9, name:"Orange plant", price:499, img:"IMG/p67.webp"},
+      {id:10, name:"Laurentil plant", price:499, img:"IMG/p68.webp"},
+      {id:11, name:"Moclame plant", price:499, img:"IMG/p69.webp"},
+      {id:12, name:"Thuja plant", price:499, img:"IMG/p70.webp"},
+      {id:13, name:"Nettedmel plant", price:499, img:"IMG/p71.webp"},
+      {id:14, name:"Butterfly plant", price:499, img:"IMG/p72.webp"},
+      {id:15, name:"Consetellas plant", price:499, img:"IMG/p73.webp"},
+      {id:16, name:"Stripess plant", price:499, img:"IMG/p74.webp"},
+      {id:17, name:"Ficuss plant", price:499, img:"IMG/p74.webp"},
+      {id:18, name:"Doll plant", price:499, img:"IMG/p75.webp"},
+      {id:19, name:"Orange plant", price:499, img:"IMG/p76.webp"},
+      {id:20, name:"Lemonline plant", price:499, img:"IMG/p77.webp"},
+      {id:21, name:"Lyrata plant", price:499, img:"IMG/p78.webp"},
+      {id:22, name:"Tropicshow plant", price:499, img:"IMG/p79.webp"},
+      {id:23, name:"Evergreen plant", price:499, img:"IMG/p80.webp"},
+      {id:24, name:"Horcrucx plant", price:499, img:"IMG/p81.webp"},
+      {id:25, name:"Cheetacs plant", price:499, img:"IMG/p82.webp"},
+      {id:26, name:"Monstra plant", price:499, img:"IMG/p83.webp"},
+      {id:27, name:"Zeylanica palnt", price:499, img:"IMG/p84.webp"},
+      {id:28, name:"Teal Lily", price:499, img:"IMG/p85.webp"},
+      {id:29, name:"Money plant", price:499, img:"IMG/p86.webp"},
+      {id:30, name:"Fiddel plant", price:499, img:"IMG/p87.webp"},
+      {id:31, name:"Fiddel plant", price:499, img:"IMG/p88.webp"},
+      {id:32, name:"Fiddel plant", price:499, img:"IMG/p89.webp"},
+    ];
+
+    const grid = document.getElementById("productGrid");
+    const search = document.getElementById("search");
+    const sort = document.getElementById("sort");
+    const modal = document.getElementById("checkoutModal");
+    let selectedProduct = null;
+    let selectedPaymentMethod = null;
+
+    function renderProducts(list) {
+      grid.innerHTML = "";
+      list.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.name}" loading="lazy">
+          <h3>${p.name}</h3>
+          <p class="price">₹${p.price}</p>
+          <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        `;
+        
+        grid.appendChild(card);
+      });
+
+      // Trigger animations
+      setTimeout(() => {
+        document.querySelectorAll('.card').forEach(card => {
+          card.style.opacity = '1';
+        });
+      }, 50);
+    }
+
+    // Add to cart function - opens modal
+    function addToCart(id) {
+      selectedProduct = products.find(p => p.id === id);
+      if (selectedProduct) {
+        openModal();
+      }
+    }
+
+    function openModal() {
+      // Reset modal state
+      document.getElementById('productDetailsSection').style.display = 'block';
+      document.getElementById('paymentSection').style.display = 'none';
+      document.getElementById('loadingSection').style.display = 'none';
+      document.getElementById('successSection').style.display = 'none';
+      
+      // Populate modal with product details
+      document.getElementById('modalProductImg').src = selectedProduct.img;
+      document.getElementById('modalProductImg').alt = selectedProduct.name;
+      document.getElementById('modalProductName').textContent = selectedProduct.name;
+      
+      const oldPrice = Math.round(selectedProduct.price * 1.25);
+      document.getElementById('modalOldPrice').textContent = `₹${oldPrice}`;
+      document.getElementById('modalNewPrice').textContent = `₹${selectedProduct.price}`;
+      document.getElementById('totalPrice').textContent = `Total: ₹${selectedProduct.price}`;
+      
+      modal.style.display = 'block';
+      
+      // Reset payment selection
+      selectedPaymentMethod = null;
+      document.getElementById('processPaymentBtn').disabled = true;
+      document.querySelectorAll('.payment-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.checked = false;
+      });
+    }
+
+    function showPaymentOptions() {
+      document.getElementById('productDetailsSection').style.display = 'none';
+      document.getElementById('paymentSection').style.display = 'block';
+    }
+
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      
+      // Update UI
+      document.querySelectorAll('.payment-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      const selectedOption = document.querySelector(`input[value="${method}"]`).closest('.payment-option');
+      selectedOption.classList.add('selected');
+      
+      document.getElementById(`${method}`).checked = true;
+      document.getElementById('processPaymentBtn').disabled = false;
+    }
+
+    function processPayment() {
+      if (!selectedPaymentMethod) return;
+      
+      // Show loading
+      document.getElementById('paymentSection').style.display = 'none';
+      document.getElementById('loadingSection').style.display = 'block';
+      
+      // Simulate payment processing
+      setTimeout(() => {
+        showSuccess();
+      }, 3000);
+    }
+
+    function showSuccess() {
+      document.getElementById('loadingSection').style.display = 'none';
+      document.getElementById('successSection').style.display = 'block';
+      
+      // Generate order details
+      const orderId = 'PLT-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 7);
+      
+      document.getElementById('orderIdDisplay').textContent = `Order ID: #${orderId}`;
+      document.getElementById('deliveryDateDisplay').textContent = `Expected Delivery: ${deliveryDate.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })}`;
+    }
+
+    // Modal close functionality
+    document.querySelector('.close').onclick = function() {
+      modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Initial render with staggered animation
+    renderProducts(products);
+
+    // Enhanced search with smooth transitions
+    search.addEventListener("input", () => {
+      const val = search.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(val));
+      
+      // Add fade out effect before re-rendering
+      document.querySelectorAll('.card').forEach((card, index) => {
+        card.style.animation = `fadeInUp 0.3s ease-in-out reverse`;
+        card.style.animationDelay = `${index * 0.05}s`;
+      });
+      
+      setTimeout(() => {
+        renderProducts(filtered);
+      }, 300);
+    });
+
+    // Enhanced sort with smooth transitions
+    sort.addEventListener("change", () => {
+      let sorted = [...products];
+      if(sort.value === "low") sorted.sort((a,b) => a.price - b.price);
+      if(sort.value === "high") sorted.sort((a,b) => b.price - a.price);
+      
+      // Add transition effect
+      document.querySelectorAll('.card').forEach((card, index) => {
+        card.style.animation = `fadeInUp 0.3s ease-in-out reverse`;
+        card.style.animationDelay = `${index * 0.03}s`;
+      });
+      
+      setTimeout(() => {
+        renderProducts(sorted);
+      }, 200);
+    });
+
+    // Smooth scroll reveal animation
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Add some interactive particles effect on hover
+    document.addEventListener('mousemove', (e) => {
+      if (Math.random() > 0.95) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    function createParticle(x, y) {
+      const particle = document.createElement('div');
+      particle.style.cssText = `
+        position: fixed;
+        width: 4px;
+        height: 4px;
+        background: #4caf50;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000;
+        left: ${x}px;
+        top: ${y}px;
+        animation: particleFloat 2s ease-out forwards;
+      `;
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes particleFloat {
+          0% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-100px) scale(0);
+          }
+        }
+      `;
+      
+      if (!document.querySelector('#particleStyles')) {
+        style.id = 'particleStyles';
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(particle);
+      
+      setTimeout(() => particle.remove(), 2000);
+    }
+
+    // Keyboard navigation for modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'block') {
+        modal.style.display = 'none';
+      }
+    });
+
+    // Payment method keyboard selection
+    document.addEventListener('keydown', (e) => {
+      if (modal.style.display === 'block' && document.getElementById('paymentSection').style.display === 'block') {
+        if (e.key === '1') selectPayment('debit');
+        if (e.key === '2') selectPayment('credit');
+        if (e.key === '3') selectPayment('cod');
+        if (e.key === 'Enter' && !document.getElementById('processPaymentBtn').disabled) {
+          processPayment();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

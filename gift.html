@@ -1,0 +1,1207 @@
+</div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openModal(index) {
+            document.getElementById('modal' + index).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(index) {
+            document.getElementById('modal' + index).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Quantity Functions
+        function increaseQuantity(index) {
+            const input = document.getElementById('qty' + index);
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decreaseQuantity(index) {
+            const input = document.getElementById('qty' + index);
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Box Selection
+        document.querySelectorAll('.box-option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.box-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Green. Gift Joy.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f4e7;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #f1f1f1 0%, #e8e8e8 100%);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        header:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            font-size: 48px;
+            color: #2d2d2d;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Banner Image Container */
+        .box {
+            margin: 40px auto;
+            max-width: 1320px;
+            padding: 0 20px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .box img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Product Container */
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 35px;
+            margin: 60px auto;
+            padding: 0 20px;
+            max-width: 1400px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: calc(25% - 27px);
+            text-align: center;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(248, 196, 43, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 15px;
+            z-index: 1;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .product-details {
+            margin: 20px 0;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 15px 0;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s ease;
+        }
+
+        .product-card:hover .product-name {
+            color: #4CAF50;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .price {
+            transform: scale(1.1);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #f8c42b 0%, #e6891c 100%);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(248, 196, 43, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-to-cart::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .add-to-cart:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(248, 196, 43, 0.5);
+        }
+
+        .add-to-cart:active {
+            transform: translateY(-1px);
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            display: block;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            width: fit-content;
+            margin: 50px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        /* Category Section */
+        .box1 {
+            margin: 60px auto;
+            padding: 0 20px;
+            max-width: 1350px;
+        }
+
+        .box1 img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 60px;
+            transition: transform 0.5s ease;
+        }
+
+        .box1 img:hover {
+            transform: scale(1.02);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .subheading {
+            font-size: 42px;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #2d2d2d;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .category-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .category-card {
+            border-radius: 15px;
+            overflow: hidden;
+            width: calc(33.333% - 20px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 25px;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .category-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #f8c42b);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .category-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+        .category-card:hover img {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .category-card h3 {
+            font-size: 22px;
+            margin-top: 20px;
+            color: #333;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .category-card:hover h3 {
+            color: #4CAF50;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .category-card {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .product-card {
+                width: calc(33.333% - 24px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .product-card {
+                width: calc(50% - 18px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 36px;
+            }
+
+            .product-card {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .subheading {
+                font-size: 32px;
+            }
+
+            .category-card {
+                width: 100%;
+            }
+
+            .box, .box1 {
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 28px;
+            }
+
+            .subheading {
+                font-size: 26px;
+            }
+
+            .product-name {
+                font-size: 18px;
+            }
+
+            .price {
+                font-size: 20px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 20px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            display: flex;
+            flex-direction: row;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        .modal-left {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f9f4e7 0%, #ede4d3 100%);
+            border-radius: 20px 0 0 20px;
+        }
+
+        .modal-left img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-right {
+            flex: 1;
+            padding: 40px;
+            position: relative;
+        }
+
+        .modal-product-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 15px;
+            margin-top: -35px;
+        }
+
+        .modal-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #4CAF50;
+            font-size: 20px;
+        }
+
+        .no-reviews {
+            color: #666;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .modal-price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .modal-original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .tax-info {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .select-box-section {
+            margin-bottom: 25px;
+        }
+
+        .select-box-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .box-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .box-option {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .box-option:hover {
+            border-color: #4CAF50;
+        }
+
+        .box-option.selected {
+            border-color: #4CAF50;
+            background-color: #f0f9f0;
+            position: relative;
+        }
+
+        .box-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4CAF50;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .box-option-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .box-option-price {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .delivery-section {
+            margin-bottom: 25px;
+        }
+
+        .delivery-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .delivery-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delivery-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .check-btn {
+            padding: 12px 25px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .gift-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .gift-checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .quantity-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-add-to-cart {
+            flex: 1;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .buy-now-btn {
+            flex: 1;
+            background: white;
+            color: #4CAF50;
+            padding: 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .buy-now-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .offers-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .offers-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .offers-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .view-offers-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-offers-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .about-section {
+            margin-top: 20px;
+        }
+
+        .about-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .about-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                flex-direction: column;
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .modal-left {
+                border-radius: 20px 20px 0 0;
+            }
+
+            .modal-right {
+                padding: 25px;
+            }
+
+            .modal-product-name {
+                font-size: 24px;
+            }
+
+            .modal-price {
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Gift Green. Gift Joy.</h2>
+    </header>
+       
+    <div class="box">
+        <img src="IMG/p1131.webp" alt="Gift Banner">
+    </div>
+    
+    <div class="product-container">
+        <div class="product-card" onclick="openModal(0)">
+            <img src="IMG/p1132.webp" alt="Peace Lily">
+            <div class="product-details">
+                <div class="product-name">Diwali Gift with Greeting Card</div>
+                <div class="price">
+                    ₹399 <span class="original-price">₹599</span>
+                </div>
+                <a href="#" class="add-to-cart" onclick="event.stopPropagation();">ADD TO CART</a>
+            </div>
+        </div>
+
+        <div class="product-card" onclick="openModal(1)">
+            <img src="IMG/p1133.webp" alt="Golden Money Plant">
+            <div class="product-details">
+                <div class="product-name">Golden Prosperity Diwali Hamper</div>
+                <div class="price">
+                    ₹349 <span class="original-price">₹599</span>
+                </div>
+                <a href="#" class="add-to-cart" onclick="event.stopPropagation();">ADD TO CART</a>
+            </div>
+        </div>
+
+        <div class="product-card" onclick="openModal(2)">
+            <img src="IMG/p1134.webp" alt="Golden Hahnii Snake Plant">
+            <div class="product-details">
+                <div class="product-name">Prosperity Diwali Gift</div>
+                <div class="price">
+                    ₹399 <span class="original-price">₹549</span>
+                </div>
+                <a href="#" class="add-to-cart" onclick="event.stopPropagation();">ADD TO CART</a>
+            </div>
+        </div>
+
+        <div class="product-card" onclick="openModal(3)">
+            <img src="IMG/p1135.webp" alt="Money Plant Variegated">
+            <div class="product-details">
+                <div class="product-name">Money Plant Variegated Diwali Gift</div>
+                <div class="price">
+                    ₹349 <span class="original-price">₹549</span>
+                </div>
+                <a href="#" class="add-to-cart" onclick="event.stopPropagation();">ADD TO CART</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popups for each product -->
+    <div id="modal0" class="modal">
+        <span class="close" onclick="closeModal(0)">&times;</span>
+        <div class="modal-content">
+            <div class="modal-left">
+                <img src="IMG/p1132.webp" alt="Diwali Gift with Greeting Card">
+            </div>
+            <div class="modal-right">
+                <h2 class="modal-product-name">Diwali Gift with Greeting Card</h2>
+                <div class="modal-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="no-reviews">No reviews</span>
+                </div>
+                <div class="modal-price">
+                    ₹399 <span class="modal-original-price">₹599</span>
+                </div>
+                <p class="tax-info">(Incl. of all taxes)</p>
+                
+                <div class="select-box-section">
+                    <label class="select-box-label">SELECT BOX</label>
+                    <div class="box-options">
+                        <div class="box-option selected">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                        <div class="box-option">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-label">Check Delivery</div>
+                    <div class="delivery-input-group">
+                        <input type="text" class="delivery-input" placeholder="Enter PIN code">
+                        <button class="check-btn">Check</button>
+                    </div>
+                </div>
+
+                <div class="gift-checkbox">
+                    <input type="checkbox" id="gift0">
+                    <label for="gift0">Make This a Gift</label>
+                </div>
+
+                <div class="quantity-section">
+                    <button class="quantity-btn" onclick="decreaseQuantity(0)">-</button>
+                    <input type="number" class="quantity-input" id="qty0" value="1" min="1">
+                    <button class="quantity-btn" onclick="increaseQuantity(0)">+</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="modal-add-to-cart">ADD TO CART</button>
+                    <button class="buy-now-btn">BUY IT NOW</button>
+                </div>
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="modal1" class="modal">
+        <span class="close" onclick="closeModal(1)">&times;</span>
+        <div class="modal-content">
+            <div class="modal-left">
+                <img src="IMG/p1133.webp" alt="Golden Prosperity Diwali Hamper">
+            </div>
+            <div class="modal-right">
+                <h2 class="modal-product-name">Golden Prosperity Diwali Hamper</h2>
+                <div class="modal-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="no-reviews">No reviews</span>
+                </div>
+                <div class="modal-price">
+                    ₹349 <span class="modal-original-price">₹599</span>
+                </div>
+                <p class="tax-info">(Incl. of all taxes)</p>
+                
+                <div class="select-box-section">
+                    <label class="select-box-label">SELECT BOX</label>
+                    <div class="box-options">
+                        <div class="box-option selected">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                        <div class="box-option">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-label">Check Delivery</div>
+                    <div class="delivery-input-group">
+                        <input type="text" class="delivery-input" placeholder="Enter PIN code">
+                        <button class="check-btn">Check</button>
+                    </div>
+                </div>
+
+                <div class="gift-checkbox">
+                    <input type="checkbox" id="gift1">
+                    <label for="gift1">Make This a Gift</label>
+                </div>
+
+                <div class="quantity-section">
+                    <button class="quantity-btn" onclick="decreaseQuantity(1)">-</button>
+                    <input type="number" class="quantity-input" id="qty1" value="1" min="1">
+                    <button class="quantity-btn" onclick="increaseQuantity(1)">+</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="modal-add-to-cart">ADD TO CART</button>
+                    <button class="buy-now-btn">BUY IT NOW</button>
+                </div>
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="modal2" class="modal">
+        <span class="close" onclick="closeModal(2)">&times;</span>
+        <div class="modal-content">
+            <div class="modal-left">
+                <img src="IMG/p1134.webp" alt="Prosperity Diwali Gift">
+            </div>
+            <div class="modal-right">
+                <h2 class="modal-product-name">Prosperity Diwali Gift</h2>
+                <div class="modal-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="no-reviews">No reviews</span>
+                </div>
+                <div class="modal-price">
+                    ₹399 <span class="modal-original-price">₹549</span>
+                </div>
+                <p class="tax-info">(Incl. of all taxes)</p>
+                
+                <div class="select-box-section">
+                    <label class="select-box-label">SELECT BOX</label>
+                    <div class="box-options">
+                        <div class="box-option selected">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                        <div class="box-option">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-label">Check Delivery</div>
+                    <div class="delivery-input-group">
+                        <input type="text" class="delivery-input" placeholder="Enter PIN code">
+                        <button class="check-btn">Check</button>
+                    </div>
+                </div>
+
+                <div class="gift-checkbox">
+                    <input type="checkbox" id="gift2">
+                    <label for="gift2">Make This a Gift</label>
+                </div>
+
+                <div class="quantity-section">
+                    <button class="quantity-btn" onclick="decreaseQuantity(2)">-</button>
+                    <input type="number" class="quantity-input" id="qty2" value="1" min="1">
+                    <button class="quantity-btn" onclick="increaseQuantity(2)">+</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="modal-add-to-cart">ADD TO CART</button>
+                    <button class="buy-now-btn">BUY IT NOW</button>
+                </div>
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="modal3" class="modal">
+        <span class="close" onclick="closeModal(3)">&times;</span>
+        <div class="modal-content">
+            <div class="modal-left">
+                <img src="IMG/p1135.webp" alt="Money Plant Variegated Diwali Gift">
+            </div>
+            <div class="modal-right">
+                <h2 class="modal-product-name">Money Plant Variegated Diwali Gift</h2>
+                <div class="modal-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="no-reviews">No reviews</span>
+                </div>
+                <div class="modal-price">
+                    ₹349 <span class="modal-original-price">₹549</span>
+                </div>
+                <p class="tax-info">(Incl. of all taxes)</p>
+                
+                <div class="select-box-section">
+                    <div class="box-options">
+                        <div class="box-option selected">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                        <div class="box-option">
+                            <div class="box-option-name"></div>
+                            <div class="box-option-price"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-label">Check Delivery</div>
+                    <div class="delivery-input-group">
+                        <input type="text" class="delivery-input" placeholder="Enter PIN code">
+                        <button class="check-btn">Check</button>
+                    </div>
+                </div>
+
+                <div class="gift-checkbox">
+                    <input type="checkbox" id="gift3">
+                    <label for="gift3">Make This a Gift</label>
+                </div>
+
+                <div class="quantity-section">
+                    <button class="quantity-btn" onclick="decreaseQuantity(3)">-</button>
+                    <input type="number" class="quantity-input" id="qty3" value="1" min="1">
+                    <button class="quantity-btn" onclick="increaseQuantity(3)">+</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="modal-add-to-cart">ADD TO CART</button>
+                    <button class="buy-now-btn">BUY IT NOW</button>
+                </div>
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/" class="whatsapp-btn" target="_blank">View All</a>
+
+    <div class="box1">
+        <img src="IMG/p1140.webp" alt="Occasion Banner">
+    </div>
+
+    <div class="container">
+        <div class="subheading">Choose The Gift For Every Occasion.</div>
+    
+        <div class="category-container">
+            <div class="category-card">
+                <img src="IMG/p1136.webp" alt="Birthday Gifts">
+                <h3>Birthday Gifts</h3>
+            </div>
+            <div class="category-card">
+                <img src="IMG/p1137.webp" alt="Anniversary Gifts">
+                <h3>Anniversary Gifts</h3>
+            </div>
+            <div class="category-card">
+                <img src="IMG/p1138.webp" alt="Housewarming Plants">
+                <h3>Housewarming Plants</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defender Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Grid View */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .main-grid.hidden {
+            opacity: 0;
+            transform: translateY(-50px);
+            pointer-events: none;
+        }
+
+        .defender-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .defender-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .defender-card:hover .card-image::before {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 30px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .explore-btn, .build-btn {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+
+        .explore-btn:hover, .build-btn:hover {
+            background: #333;
+            transform: translateX(5px);
+        }
+
+        .explore-btn::before, .build-btn::before {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .explore-btn:hover::before, .build-btn:hover::before {
+            transform: translateX(3px);
+        }
+
+        /* Detail Page */
+        .detail-page {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            min-height: 100vh;
+            background: white;
+            z-index: 10;
+        }
+
+        .detail-page.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+            position: relative;
+        }
+
+        .detail-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        .detail-title {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0;
+            max-width: 1200px;
+            margin: 60px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .action-card {
+            background: white;
+            padding: 60px 40px;
+            text-align: left;
+            border-right: 1px solid #eee;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .action-card:last-child {
+            border-right: none;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .action-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .action-card:hover .action-icon {
+            background: #007bff;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .action-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        .action-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        .action-card:hover .action-title,
+        .action-card:hover .action-description {
+            color: #1a1a1a;
+        }
+
+        .tabs-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 60px;
+            background: white;
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 20px 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            background: #1a1a1a;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .build-your-own-section {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,123,255,0.3);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .action-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-direction: column;
+                border-radius: 12px;
+            }
+            
+            .tab-btn {
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Grid View -->
+        <div class="main-grid" id="mainGrid">
+            <div class="defender-card" data-model="octa">
+                <div class="card-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;400&quot; height=&quot;250&quot; viewBox=&quot;0 0 400 250&quot;><rect width=&quot;400&quot; height=&quot;250&quot; fill=&quot;%23e0e0e0&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;16&quot; fill=&quot;%23666&quot;>Defender OCTA</text></svg>')"></div>
+                <div class="card-content">
+                    <h3 class="card-title">DEFENDER OCTA</h3>
+                    <p class="card-description">For adventures of extreme proportions. The most powerful Defender ever made.</p>
+                    <button class="explore-btn" onclick="showDetail('DEFENDER OCTA')">Explore</button>
+                    <button class="build-btn">Build Your Own</button>
+                </div>
+            </div>
+
+            <div class="defender-card" data-model="130">
+                <div class="card-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;400&quot; height=&quot;250&quot; viewBox=&quot;0 0 400 250&quot;><rect width=&quot;400&quot; height=&quot;250&quot; fill=&quot;%23d4b896&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;16&quot; fill=&quot;%23666&quot;>Defender 130</text></svg>')"></div>
+                <div class="card-content">
+                    <h3 class="card-title">DEFENDER 130</h3>
+                    <p class="card-description">All in adventure. Shared epic adventures, with up to eight seats.</p>
+                    <button class="explore-btn" onclick="showDetail('DEFENDER 130')">Explore</button>
+                    <button class="build-btn">Build Your Own</button>
+                </div>
+            </div>
+
+            <div class="defender-card" data-model="110">
+                <div class="card-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;400&quot; height=&quot;250&quot; viewBox=&quot;0 0 400 250&quot;><rect width=&quot;400&quot; height=&quot;250&quot; fill=&quot;%232d4a3e&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;16&quot; fill=&quot;%23fff&quot;>Defender 110</text></svg>')"></div>
+                <div class="card-content">
+                    <h3 class="card-title">DEFENDER 110</h3>
+                    <p class="card-description">Load up. Go anywhere. An impressive loadspace, with up to seven seats.</p>
+                    <button class="explore-btn" onclick="showDetail('DEFENDER 110')">Explore</button>
+                    <button class="build-btn">Build Your Own</button>
+                </div>
+            </div>
+
+            <div class="defender-card" data-model="90">
+                <div class="card-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;400&quot; height=&quot;250&quot; viewBox=&quot;0 0 400 250&quot;><rect width=&quot;400&quot; height=&quot;250&quot; fill=&quot;%23c0c0c0&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;16&quot; fill=&quot;%23666&quot;>Defender 90</text></svg>')"></div>
+                <div class="card-content">
+                    <h3 class="card-title">DEFENDER 90</h3>
+                    <p class="card-description">Compact proportions, with the option of six seats.</p>
+                    <button class="explore-btn" onclick="showDetail('DEFENDER 90')">Explore</button>
+                    <button class="build-btn">Build Your Own</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Page -->
+        <div class="detail-page" id="detailPage">
+            <div class="detail-header">
+                <button class="back-btn" onclick="showMain()">← Back to Models</button>
+                <h1 class="detail-title" id="detailTitle">DEFENDER OCTA</h1>
+            </div>
+
+            <div class="action-cards">
+                <div class="action-card">
+                    <div class="action-icon">🚗</div>
+                    <h3 class="action-title">BOOK A TEST DRIVE</h3>
+                    <p class="action-description">Arrange a test drive through your nearest Retailer.</p>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">🔧</div>
+                    <h3 class="action-title">BUILD YOUR OWN</h3>
+                    <p class="action-description">Use the configurator to build your perfect Range Rover.</p>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">📋</div>
+                    <h3 class="action-title">VIEW PRICES</h3>
+                    <p class="action-description">View vehicle prices online.</p>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">📱</div>
+                    <h3 class="action-title">RESERVE ONLINE</h3>
+                    <p class="action-description">Reserve your Land Rover online.</p>
+                </div>
+            </div>
+
+            <div class="tabs-section">
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active">Exterior</button>
+                        <button class="tab-btn">Performance</button>
+                        <button class="tab-btn">OCTA Black</button>
+                        <button class="tab-btn">Durability and Capability</button>
+                        <button class="tab-btn">Interior</button>
+                        <button class="tab-btn">Build and Order</button>
+                    </div>
+                    
+                    <div class="build-your-own-section">
+                        <button class="cta-button">🔧 BUILD YOUR OWN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDetail(modelName) {
+            const mainGrid = document.getElementById('mainGrid');
+            const detailPage = document.getElementById('detailPage');
+            const detailTitle = document.getElementById('detailTitle');
+            
+            // Update title
+            detailTitle.textContent = modelName;
+            
+            // Hide main grid with animation
+            mainGrid.classList.add('hidden');
+            
+            // Show detail page with delay for smooth transition
+            setTimeout(() => {
+                detailPage.classList.add('active');
+            }, 300);
+        }
+
+        function showMain() {
+            const mainGrid = document.getElementById('mainGrid');
+            const detailPage = document.getElementById('detailPage');
+            
+            // Hide detail page
+            detailPage.classList.remove('active');
+            
+            // Show main grid with delay
+            setTimeout(() => {
+                mainGrid.classList.remove('hidden');
+            }, 300);
+        }
+
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabBtns.forEach(tab => tab.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                });
+            });
+
+            // Add stagger animation to cards on load
+            const cards = document.querySelectorAll('.defender-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'slideUp 0.6s ease forwards';
+            });
+        });
+
+        // Add CSS animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

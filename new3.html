@@ -1,0 +1,1937 @@
+<html>
+
+<head>
+        <script src="https://kit.fontawesome.com/16ceccb4ee.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ugaoo Clone</title>
+    <link rel="stylesheet" href="plant.css">
+      
+</head>
+
+    <style>
+
+/* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+body {
+        background-color: #fff;
+        color: #333;
+        overflow-x: hidden;
+    }
+
+    /* Loading Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Top Bar with gradient animation */
+    .top-bar {
+        display: flex;
+        justify-content: space-around;
+        background: linear-gradient(45deg, #153d2e, #1e5a3f, #153d2e);
+        background-size: 200% 200%;
+        animation: gradientShift 3s ease infinite;
+        color: #fff;
+        padding: 8px;
+        font-size: 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .top-bar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Navbar with enhanced animations */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background-color: white;
+        border-bottom: 1px solid #ccc;
+        animation: slideInLeft 0.8s ease;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+
+    .logo {
+        font-size: 50px;
+        font-weight: bold;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        color: olive;
+        animation: float 3s ease-in-out infinite;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+        color: #2ecc71;
+        transform: scale(1.1) rotate(5deg);
+        text-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+    }
+
+    .logo i {
+        animation: rotate 4s linear infinite;
+        display: inline-block;
+    }
+
+    .nav-links .highlight {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .search-box {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background: olive;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(5, 29, 214, 0.2);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box:hover {
+        box-shadow: 0 8px 30px rgba(5, 29, 214, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: none;
+      width: 0;
+      padding: 0;
+      font-size: 16px;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      color: white;
+      margin-left: 10px;
+      flex-grow: 1;
+    }
+
+    .search-box.active {
+      width: 250px;
+      background: linear-gradient(45deg, olive, #6a8b23);
+    }
+
+    .search-box.active input {
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    .search-icon {
+      width: 50px;
+      height: 50px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .search-icon:hover {
+        transform: scale(1.1);
+    }
+
+    .search-icon i {
+      font-size: 25px;
+      color: black;
+      margin-top: 5px;
+      margin-left: -5px;
+      transition: color 0.3s ease;
+    }
+
+    /* Categories Section with enhanced hover */
+    .categories {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px 10px;
+        flex-wrap: wrap;
+        background: linear-gradient(135deg, #f9f9f9, #e8f5e8);
+        font-family: Arial, Helvetica, sans-serif;
+        animation: fadeInUp 1s ease;
+    }
+
+    .circle {
+        text-align: center;
+        margin: 10px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+
+    .circle:hover {
+        transform: translateY(-15px) scale(1.05);
+    }
+
+    .circle img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 8px;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .circle:hover img {
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        transform: rotate(5deg);
+        border: 3px solid #2ecc71;
+    }
+
+    .circle p {
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .circle:hover p {
+        color: #2ecc71;
+        font-weight: bold;
+        transform: scale(1.1);
+    }
+
+    /* Banner Section with parallax effect */
+    .banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #0f3a35, #153d2e, #1e5a3f);
+        padding: 60px 50px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        animation: slideInRight 1s ease;
+    }
+
+    .banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        animation: float 10s ease-in-out infinite;
+    }
+
+    .banner-text {
+        max-width: 50%;
+        z-index: 2;
+        animation: slideInLeft 1.2s ease;
+    }
+
+    .banner-text p {
+        font-size: 16px;
+        color: #ffd700;
+        margin-bottom: 10px;
+        animation: pulse 2s ease infinite;
+    }
+
+    .banner-text h1 {
+        font-size: 36px;
+        line-height: 1.2;
+        animation: fadeInUp 1.5s ease;
+    }
+
+    .banner-text h1 span {
+        text-decoration: underline yellow;
+        color: lightblue;
+        animation: pulse 3s ease infinite;
+    }
+
+    .banner-text button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: linear-gradient(45deg, white, #f0f0f0);
+        color: green;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 25px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .banner-text button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .banner-text button:hover::before {
+        left: 100%;
+    }
+
+    .banner-text button:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .banner-img img {
+        width: 250px;
+        height: 250px;
+        border-radius: 50px;
+        animation: float 4s ease-in-out infinite;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .banner-img img:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+     .promo-box {
+        display: flex;
+        gap: 40px;
+        height: 400px;
+        width: 1300px;
+        justify-content: space-around;
+        margin-left: 35px;
+        margin-top: 20px;
+        background: linear-gradient(45deg, pink, #ff69b4, #ffc0cb);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        animation: fadeInUp 1.5s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .promo-box::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ff1493, #ff69b4, #ffc0cb, #ff1493);
+        border-radius: 22px;
+        z-index: -1;
+        animation: rotate 4s linear infinite;
+    }
+
+    .promo-box img {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 10px;
+    }
+
+    .promo-box img:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+.xl-offer {
+  margin-top: 20px;
+  animation: fadeInUp 1.8s ease;
+}
+
+.xl-offer img {
+    transition: all 0.4s ease;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.xl-offer img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+     .bestseller-section {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #fdfdfd, #f0fff0);
+  animation: fadeInUp 2s ease;
+}
+
+.bestseller-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+  animation: fadeInUp 2.2s ease;
+  position: relative;
+}
+
+.bestseller-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    border-radius: 2px;
+}
+
+.bestseller-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bestseller-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.bestseller-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.bestseller-card:hover::before {
+    left: 100%;
+}
+
+.bestseller-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border: 2px solid #2ecc71;
+}
+
+.bestseller-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: all 0.4s ease;
+}
+
+.bestseller-card:hover img {
+    transform: scale(1.1);
+}
+
+.offer-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 15px;
+  animation: pulse 2s ease infinite;
+  box-shadow: 0 2px 10px rgba(231, 76, 60, 0.4);
+}
+
+.rating {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  transition: color 0.3s ease;
+}
+
+.bestseller-card:hover .rating {
+    color: #2ecc71;
+}
+
+.bestseller-card h3 {
+  font-size: 16px;
+  margin: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.bestseller-card:hover h3 {
+    color: #2ecc71;
+    transform: scale(1.05);
+}
+
+.price-new {
+  color: #2ecc71;
+  font-weight: bold;
+  font-size: 18px;
+  animation: pulse 3s ease infinite;
+}
+
+.price-old {
+  color: gray;
+  text-decoration: line-through;
+  margin-left: 5px;
+}
+
+.bestseller-card button {
+  margin-top: 10px;
+  background: linear-gradient(45deg, #1e8449, #145a32);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(30, 132, 73, 0.3);
+}
+
+.bestseller-card button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.bestseller-card button:hover::before {
+    left: 100%;
+}
+
+.bestseller-card button:hover {
+  background: linear-gradient(45deg, #27ae60, #2ecc71);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(30, 132, 73, 0.4);
+}
+
+.dell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInUp 2.5s ease;
+}
+
+.dell h1 {
+  margin-top: 20px;
+  margin-left: 60px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 45px;
+  background: linear-gradient(45deg, #2ecc71, #27ae60, #1e8449);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: float 4s ease-in-out infinite;
+}
+
+.div img {
+    margin-top: 1px;
+    margin-left: 50px;
+    filter: saturate(100%);
+    width: 5%;
+    border: 3px solid rgba(255,255,255,0.5);
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.div img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(46, 204, 113, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.div img:hover::before {
+    opacity: 1;
+}
+
+.div img:hover {
+    filter: saturate(150%) brightness(1.1);
+    width: 25%;
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    border-color: #2ecc71;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:400,600');
+
+.nav {
+  font-family: 'Titillium Web';
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 600;
+  animation: slideInLeft 1s ease;
+}
+
+.nav * {
+  box-sizing: border-box;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav li {
+  display: inline-block;
+  list-style: outside none none;
+  margin: 0.5em 1em;
+  padding: 0;
+}
+
+.nav a {
+  padding: 0.8em 1.2em;
+  color: #0f3a35;
+  position: relative;
+  text-decoration: none;
+  font-size: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.nav a::before,
+.nav a::after {
+  content: '';
+  height: 14px;
+  width: 14px;
+  position: absolute;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+}
+
+.nav a::before {
+  content: '';
+  right: 0;
+  top: 0;
+  border-top: 3px solid #3E8914;
+  border-right: 3px solid #2E640F;
+  transform: translate(-100%, 50%);
+}
+
+.nav a:after {
+  content: '';
+  left: 0;
+  bottom: 0;
+  border-bottom: 3px solid #2E640F;
+  border-left: 3px solid #3E8914;
+  transform: translate(100%, -50%)
+}
+
+.nav a:hover:before,
+.nav a:hover:after {
+  transform: translate(0,0);
+  opacity: 1;
+}
+
+.nav a:hover {
+  color: #3DA35D;
+  background: rgba(61, 163, 93, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(61, 163, 93, 0.3);
+}
+
+.live {
+  display: flex;
+  background: linear-gradient(135deg, lightgreen, #98fb98, #90ee90);
+  gap: 150px;
+  margin-left: 20px;
+  height: 505px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(144, 238, 144, 0.3);
+  animation: fadeInUp 3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.live::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.live video {
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: all 0.4s ease;
+}
+
+.live video:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* Discover Ugaoo Stores */
+.planty-stores {
+  text-align: center;
+  padding: 50px;
+  animation: fadeInUp 3.2s ease;
+}
+
+.planty-stores h2 {
+  color: darkgreen;
+  padding: 55px;
+  font-size: 30px;
+  position: relative;
+  animation: float 4s ease-in-out infinite;
+}
+
+.planty-stores h2::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 3px;
+    background: linear-gradient(45deg, darkgreen, #2ecc71);
+    border-radius: 2px;
+}
+
+.store-container {
+  padding: 10px 10px;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+.store-card {
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.store-card:hover {
+    transform: translateY(-15px) scale(1.05);
+}
+
+.store-card img {
+  width: 300px; 
+  border-radius: 15px;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.store-card:hover img {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transform: rotate(2deg);
+}
+
+.store-card p {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.store-card:hover p {
+    color: #2ecc71;
+    transform: scale(1.1);
+}
+
+.store-card a {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.store-card a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 50%;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    transition: all 0.3s ease;
+}
+
+.store-card a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.store-card a:hover {
+    color: #2ecc71;
+}
+
+.plantperks-wrap {
+    --pp-maxw: 1200px;
+    --pp-gap: 30px;
+    --pp-sep: rgba(0,0,0,0.15);
+    --pp-text: #2b2b2b;
+    --pp-sub: #5c6a5f;
+    width: 100%;
+    max-width: var(--pp-maxw);
+    margin: 60px auto;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, var(--white), var(--light-gray));
+    display: flex;
+    gap: var(--pp-gap);
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+.perk-item {
+    flex: 1 1 0;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    position: relative;
+    border-radius: 15px;
+    transition: var(--transition);
+    cursor: pointer;
+    background: var(--white);
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+.perk-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px var(--shadow-hover);
+    background: linear-gradient(135deg, var(--white), #f8fffe);
+}
+
+.perk-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -15px;
+    top: 20%;
+    bottom: 20%;
+    width: 2px;
+    background: linear-gradient(var(--accent-green), var(--light-green));
+    border-radius: 1px;
+}
+
+.plantperks.icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    display: block;
+    transition: var(--transition);
+    border-radius: 10px;
+}
+
+.perk-item:hover .plantperks.icon {
+    transform: scale(1.1) rotate(5deg);
+    filter: brightness(1.1);
+}
+
+.plantperks.text h4 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--pp-text);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.perk-item:hover .plantperks.text h4 {
+    color: var(--accent-green);
+}
+
+.perk-animation {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    opacity: 0;
+    transition: var(--transition);
+    animation: float 2s ease-in-out infinite;
+}
+
+.perk-item:hover .perk-animation {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .plantperks-wrap { gap: 18px; }
+  .plantperks.item { grid-template-columns: 36px 1fr; }
+  .plantperks.icon { width: 36px; height: 36px; }
+  .plantperks.text h4 { font-size: 14px; }
+}
+
+@media (max-width: 640px) {
+  .plantperks-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .plantperks.item { 
+    border: 1px solid rgba(46, 204, 113, 0.1);
+    border-radius: 15px;
+    padding: 12px;
+  }
+  .plantperks.item::after { display: none; }
+}
+
+@media (max-width: 400px) {
+  .plantperks-wrap { grid-template-columns;}
+  }
+
+  /* Enhanced About Section */
+.about-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, var(--white), var(--light-gray));
+    text-align: center;
+}
+
+.about-title {
+    font-size: 48px;
+    color: var(--primary-green);
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.about-text {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--gray);
+}
+
+.promotional-banner {
+    width: 100%;
+    max-width: 1300px;
+    height: auto;
+    border-radius: 20px;
+    margin: 40px auto;
+    display: block;
+    box-shadow: 0 10px 30px var(--shadow);
+    transition: var(--transition);
+}
+
+.promotional-banner:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+}
+
+/* Enhanced Footer Section */
+.footer-section {
+    background: linear-gradient(135deg, var(--light-gray), #e8f4f8);
+    padding: 80px 30px 40px;
+    margin-top: 60px;
+    border-top: 1px solid #e5e5e5;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-banner {
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    color: var(--white);
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 60px;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-scroll {
+    animation: scroll 20s linear infinite;
+    white-space: nowrap;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 50px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-col h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: var(--primary-green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+
+.footer-col h4::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-green), var(--light-green));
+    border-radius: 2px;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin: 12px 0;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: var(--gray);
+    font-size: 14px;
+    transition: var(--transition);
+    position: relative;
+    padding: 5px 0;
+    display: inline-block;
+}
+
+.footer-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-green);
+    transition: width 0.3s ease;
+}
+
+.footer-link:hover::before {
+    width: 100%;
+}
+
+.footer-link:hover {
+    color: var(--accent-green);
+    transform: translateX(5px);
+}
+
+.contact-info p {
+    margin: 15px 0;
+    color: var(--gray);
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.contact-info p:hover {
+    color: var(--accent-green);
+    transform: scale(1.02);
+}
+
+.newsletter-form {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 2px solid var(--accent-green);
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+.newsletter-input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    background: var(--white);
+}
+
+.newsletter-btn {
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--accent-green), var(--light-green));
+    color: var(--white);
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.newsletter-btn:hover {
+    background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+    transform: scale(1.05);
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.social-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--accent-green);
+    border-radius: 50%;
+    color: var(--accent-green);
+    font-size: 18px;
+    transition: var(--transition);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-green), var(--light-green));
+    transform: scale(0);
+    transition: transform 0.3s ease;
+    border-radius: 50%;
+}
+
+.social-item:hover::before {
+    transform: scale(1);
+}
+
+.social-item:hover {
+    color: var(--white);
+    border-color: var(--light-green);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(62, 137, 20, 0.3);
+}
+
+.social-item i {
+    position: relative;
+    z-index: 2;
+}
+
+/* Notification System */
+#notification-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 10000;
+}
+
+.notification {
+    background: var(--accent-green);
+    color: var(--white);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px var(--shadow);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.notification::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--white);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.error {
+    background: #e74c3c;
+}
+
+.notification.success {
+    background: var(--light-green);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .nav {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .banner-text {
+        max-width: 100%;
+        margin-bottom: 30px;
+    }
+    
+    .banner-title {
+        font-size: 36px;
+    }
+    
+    .categories {
+        gap: 15px;
+        padding: 30px 15px;
+    }
+    
+    .category-item {
+        padding: 15px;
+    }
+    
+    .circle img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .bestseller-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .promo-box {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .plant-gallery {
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .gallery-img {
+        width: 60px;
+        height: 200px;
+    }
+    
+    .gallery-img:hover {
+        width: 120px;
+    }
+    
+    .video-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .store-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    
+    .plantperks-wrap {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .perk-item:not(:last-child)::after {
+        display: none;
+    }
+    
+    .best-deals-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .reviews-carousel {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .review-item {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-title {
+        font-size: 28px;
+    }
+    
+    .bestseller-title,
+    .stores-title,
+    .deals-title,
+    .reviews-title {
+        font-size: 32px;
+    }
+    
+    .gallery-title {
+        font-size: 32px;
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .bestseller-grid,
+    .best-deals-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .promo-item {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .video-item {
+        width: 280px;
+        height: 400px;
+    }
+}
+
+/* Scroll Animation */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--accent-green), var(--light-green));
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(var(--light-green), var(--accent-green));
+}
+
+.bestseller-card a{
+text-decoration: none;
+color: white;
+}
+    </style>
+
+
+    
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="top-bar">
+            <p>Free Delivery Above ₹299 | Shop Now</p>
+            <p>Buy 2 Get 1 | Use Code: THUNDERSTRUCK</p>
+            <p>Buy 2 XL Plants @ ₹3500</p>
+        </div>
+        
+        <nav class="navbar">
+            <div class="logo"> <i class="fa-solid fa-seedling"></i> PLANTY</div>
+            <ul class="nav">
+            <li><a href="page1.html">PLANTS</a></li>
+            <li><a href="page2.html">SEEDS</a></li>
+            <li><a href="page3.html">CARE</a></li>
+            <li><a href="gift.html">GIFTING</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            </ul>
+            
+            <div class="search-box" id="searchBox"><template></template>
+    <input type="text" placeholder="Search...">
+    <button class="search-icon" id="searchBtn">
+      <i class="fas fa-search"></i>
+      
+    </button>
+  </div>
+           
+                
+            </div>
+        </nav>
+    </header><!-- Category Circles -->
+<section class="categories">
+    <div class="circle"><img src="IMG/p111.webp" alt="Buy 2 Get 1"><p>Buy 2 Get 1</p></div>
+    <div class="circle"><a href="indoor.html"><img src="IMG/p2.avif" alt="Indoor Plants"></a><p>Indoor Plants</p></div>
+    <div class="circle"><img src="IMG/p3.avif" alt="XL Plants"><p>XL plants</p></div>
+    <div class="circle"><img src="IMG/p4.avif" alt="Bestsellers"><p>Bestsellers</p></div>
+    <div class="circle"><img src="IMG/p5.avif" alt="Easy To Care"><p>Easy To Care</p></div>
+    <div class="circle"><img src="IMG/p6.avif" alt="Fertilisers"><p>Fertilisers</p></div>
+    <div class="circle"><img src="IMG/p7.avif" alt="Vegetable Seeds"><p>Vegetable Seeds</p></div>
+    <div class="circle"><img src="IMG/p8.avif" alt="Plant Care"><p>Plant Care</p></div>
+</section>
+
+<!-- Banner Section -->
+<section class="banner">
+    <div class="banner-text">
+        <p>INDOOR PLANTS</p>
+        <h1>Monsoon <span>Blues</span> Greens</h1>
+        <button>Shop Now</button>
+    </div>
+    <div class="banner-img">
+        <img src="IMG/animation.webp" alt="Plants">
+    </div>
+    </section>
+<!-- New Section Start -->
+
+    <div class="promo-box">
+        <img src="IMG/p30.webp">
+        <img src="IMG/p31.webp">
+        <img src="IMG/p33.webp">
+    </div>
+
+<div  class="xl-offer">
+    <img src="IMG/p9.webp" width="1350" alt="XL Plants">
+</div>
+
+
+<section class="bestseller-section">
+  <h2 class="bestseller-title">Bestsellers</h2>
+  <div class="bestseller-grid">
+    <!-- Product 1 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p10.webp">
+      <div class="rating">⭐ 4.79 | 507</div>
+      <h3>Broken Heart Plant</h3>
+      <p><span class="price-new">₹ 298</span> <span class="price-old">₹ 299</span></p>
+      <button><a href="cart1.html">View Product</a></button>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p11.webp">
+      <div class="rating">⭐ 4.8 | 383</div>
+      <h3>Peace Lily Plant</h3>
+      <p><span class="price-new">₹ 329</span> <span class="price-old">₹ 399</span></p>
+      <button><a href="cart2.html">View Product</a></button>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p12.webp">
+      <div class="rating">⭐ 4.83 | 380</div>
+      <h3>Jade Plant Mini</h3>
+      <p><span class="price-new">₹ 298</span> <span class="price-old">₹ 299</span></p>
+      <button><a href="cart3.html">View Product</a></button>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p13.webp">
+      <div class="rating">⭐ 4.82 | 1169</div>
+      <h3>Bamboo Palm Plant</h3>
+      <p><span class="price-new">₹ 329</span> <span class="price-old">₹ 499</span></p>
+      <button><a href="cart4.html">View Product</a></button>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p14.webp">
+      <div class="rating">⭐ 4.75 | 400</div>
+      <h3>Fiddle Leaf Plant</h3>
+      <p><span class="price-new">₹ 349</span> <span class="price-old">₹ 399</span></p>
+      <button><a href="cart5.html">View Product</a></button>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p15.webp">
+      <div class="rating">⭐ 4.6 | 210</div>
+      <h3>Areca Palm</h3>
+      <p><span class="price-new">₹ 359</span> <span class="price-old">₹ 419</span></p>
+      <button><a href="cart6.html">View Product</a></button>
+    </div>
+
+    <!-- Product 7 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p16.webp">
+      <div class="rating">⭐ 4.9 | 800</div>
+      <h3>Snake Plant</h3>
+      <p><span class="price-new">₹ 379</span> <span class="price-old">₹ 449</span></p>
+      <button><a href="cart7.html">View Product</a></button>
+    </div>
+
+    <!-- Product 8 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p17.webp">
+      <div class="rating">⭐ 4.85 | 1000</div>
+      <h3>Money Plant</h3>
+      <p><span class="price-new">₹ 299</span> <span class="price-old">₹ 349</span></p>
+      <button><a href="cart8.html">View Product</a></button>
+    </div>
+  </div>
+</section>
+
+<div class="dell">
+
+<h1> BEST SELLING PLANT</h1>
+
+
+
+</div>
+
+<div class="div">
+    <img src="IMG/p18.webp">
+    <img src="IMG/p19.webp">
+    <img src="IMG/p20.webp">
+    <img src="IMG/p21.webp">
+    <img src="IMG/p22.webp">
+    <img src="IMG/p23.webp">
+    <img src="IMG/p24.webp">
+    <img src="IMG/p25.webp">
+    
+  </div>
+
+
+
+  <section class="bestseller-section">
+  <h2 class="bestseller-title">New Arrivals</h2>
+  <div class="bestseller-grid">
+    <!-- Product 1 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p26.webp">
+      <div class="rating">⭐ 4.79 | 507</div>
+      <h3>Ridged Wooden Pot</h3>
+      <p><span class="price-new">₹ 298</span> <span class="price-old">₹ 299</span></p>
+      <button><a href="newcartttt.html">View Product</a></button>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p27.webp">
+      <div class="rating">⭐ 4.8 | 383</div>
+      <h3>Elegance Wooden Pot</h3>
+      <p><span class="price-new">₹ 329</span> <span class="price-old">₹ 399</span></p>
+      <button><a href="newcart2.html">View Product</a></button>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p28.webp">
+      <div class="rating">⭐ 4.83 | 380</div>
+      <h3>Charm Wooden Pot</h3>
+      <p><span class="price-new">₹ 298</span> <span class="price-old">₹ 299</span></p>
+      <button><a href="newcart3.html">View Product</a></button>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="bestseller-card">
+      <span class="offer-tag">Buy 2 Get 1</span>
+      <img src="IMG/p29.webp">
+      <div class="rating">⭐ 4.82 | 1169</div>
+      <h3>prism Wooden Pot</h3>
+      <p><span class="price-new">₹ 329</span> <span class="price-old">₹ 499</span></p>
+      <button><a href="newcart4.html">View Product</a></button>
+    </div>
+    </div>
+    </section>
+    
+
+
+<div class="live">
+<video src="IMG/v1.mp4" width="200" height="600" controls loop autoplay muted> </video>
+<video src="IMG/v2.mp4" width="200" height="600" controls loop autoplay muted> </video>
+<video src="IMG/v3.mp4" width="200" height="600" controls loop autoplay muted> </video>
+<video src="IMG/v4.mp4" width="200" height="600" controls loop autoplay muted> </video>
+</div>
+
+<section class="planty-stores">
+  <h2>Discover Planty Stores</h2>
+  <div class="store-container">
+    <div class="store-card">
+      <img src="IMG/Mumbai_1.webp" alt="Mumbai Store">
+      <p><a href="mumbai.html">Mumbai</a></p>
+    </div>
+    <div class="store-card">
+      <img src="IMG/bangalore_1.webp" alt="Bangalore Store">
+      <p><a href="banglore.html">Bangalore</a></p>
+    </div>
+    <div class="store-card">
+      <img src="IMG/Pune_1.webp" alt="Pune Store">
+      <p><a href="pune.html">Pune</a></p>
+    </div>
+  </div>
+</section>
+
+   <!-- ===== Plant Perks / Feature Bar (Paste where you want the section) ===== -->
+<section class="plantperks-wrap">
+        <div class="plantperks item perk-item" data-perk="shipping">
+            <img src="IMG/p34.avif" alt="Free Shipping" class="plantperks icon" />
+            <div class="plantperks text">
+                <h4>Free shipping ₹999+</h4>
+            </div>
+            <div class="perk-animation">🚚</div>
+        </div>
+
+        <div class="plantperks item perk-item" data-perk="replacement">
+            <img src="IMG/p35.avif" alt="Replacement" class="plantperks icon" />
+            <div class="plantperks text">
+                <h4>14 days Replacement if damaged*</h4>
+            </div>
+            <div class="perk-animation">🔄</div>
+        </div>
+
+        <div class="plantperks item perk-item" data-perk="guidance">
+            <img src="IMG/p36.avif" alt="Care Guidance" class="plantperks icon" />
+            <div class="plantperks text">
+                <h4>Expert Care Guidance from Plant Doctors</h4>
+            </div>
+            <div class="perk-animation">👨‍⚕️</div>
+        </div>
+
+        <div class="plantperks item perk-item" data-perk="trusted">
+            <img src="IMG/p37.avif" alt="Trusted by 10M+" class="plantperks icon" />
+            <div class="plantperks text">
+                <h4>Trusted By 10M+ Plant Lovers</h4>
+            </div>
+            <div class="perk-animation">💖</div>
+        </div>
+    </section>
+
+
+<!-- Best Deals Section -->
+<section class="best-deals-section">
+  <h2>Hafte ke best deals</h2>
+  
+  <div class="best-deals-grid">
+    <!-- Card 1 -->
+    <div class="deal-card">
+      <span class="deal-tag">24% OFF</span>
+      <img src="IMG/p50.webp" alt="Monstera Deliciosa Plant">
+      <h3>Monstera Deliciosa Plant</h3>
+      <p class="new-price">₹1,399</p>
+      <button>Add To Cart</button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="deal-card">
+      <span class="deal-tag">39% OFF</span>
+      <img src="IMG/p51.webp" alt="Philodendron Melinonii Green">
+      <h3>Philodendron Melinonii </h3>
+      <p class="new-price">₹1,399</p>
+      <button>Add To Cart</button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="deal-card">
+      <span class="deal-tag sale">Sale</span>
+      <img src="IMG/p52.webp" alt="Philodendron Oxycardium Golden">
+      <h3>Philodendron Oxycardium Golden</h3>
+      <p class="new-price">₹1,199</p>
+      <button>Add To Cart</button>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="deal-card">
+      <span class="deal-tag sale">Sale</span>
+      <img src="IMG/p53.webp" alt="Philodendron Micans Plant">
+      <h3>Philodendron Micans Plant</h3>
+      <p class="new-price">₹1,199</p>
+      <button>Add To Cart</button>
+    </div>
+  </div>
+
+  <div class="view-all">
+    <button>View all</button>
+  </div>
+</section>
+
+
+
+
+
+<!-- Customer Reviews Section -->
+  <section class="reviews-section">
+        <h2 class="reviews-title">What other Bhidu's are saying</h2>
+
+        <div class="reviews-wrapper">
+            <div class="reviews-carousel">
+                <!-- Review Card 1 -->
+                <div class="review-card review-item" data-reviewer="aishwarya">
+                    <div class="review-header">
+                        <img src="IMG/p54.webp" alt="Aishwarya Roy" class="review-img">
+                        <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <p class="review-text">
+                        "After receiving this plant (Monstera Deliciosa), the plant was mature,
+                        tall as promised with a healthy growth... it was well hydrated and full of node.
+                        The packaging was great. I'll be happy to buy it again."
+                    </p>
+                    <h3 class="review-name">Aishwarya Roy</h3>
+                    <div class="review-animation">💚</div>
+                </div>
+
+                <!-- Review Card 2 -->
+                <div class="review-card review-item" data-reviewer="samarth">
+                    <div class="review-header">
+                        <img src="IMG/p55.webp" alt="Samarth Goyal" class="review-img">
+                        <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <p class="review-text">
+                        "After receiving this plant (Monstera Deliciosa), the plant was mature,
+                        tall as promised with a healthy growth... it was well hydrated and full of node.
+                        The packaging was great. I'll be happy to buy it again."
+                    </p>
+                    <h3 class="review-name">Samarth Goyal</h3>
+                    <div class="review-animation">🌿</div>
+                </div>
+
+                <!-- Review Card 3 -->
+                <div class="review-card review-item" data-reviewer="rohit">
+                    <div class="review-header">
+                        <img src="IMG/p56.webp" alt="Rohit Sharma" class="review-img">
+                        <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <p class="review-text">
+                        "After receiving this plant (Monstera Deliciosa), the plant was mature,
+                        tall as promised with a healthy growth... it was well hydrated and full of node.
+                        The packaging was great. I'll be happy to buy it again."
+                    </p>
+                    <h3 class="review-name">Rohit Sharma</h3>
+                    <div class="review-animation">🌱</div>
+                </div>
+
+                <!-- Review Card 4 -->
+                <div class="review-card review-item" data-reviewer="pooja">
+                    <div class="review-header">
+                        <img src="IMG/p57.webp" alt="Pooja Mehta" class="review-img">
+                        <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <p class="review-text">
+                        "After receiving this plant (Monstera Deliciosa), the plant was mature,
+                        tall as promised with a healthy growth... it was well hydrated and full of node.
+                        The packaging was great. I'll be happy to buy it again."
+                    </p>
+                    <h3 class="review-name">Pooja Mehta</h3>
+                    <div class="review-animation">🍃</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<img src="IMG/p58.webp" height="200" width="1300">
+
+<!-- About Section -->
+    <section class="about-section">
+        <h2 class="about-title">About Planty</h2>
+        <p class="about-text">
+            Planty is India's No.1 online plant store and gardening products destination, trusted by millions of plant lovers. 
+            Shop a wide range of <strong>indoor plants, flowering plants, succulents,</strong> and <strong>air-purifying greens</strong> delivered right to your doorstep. 
+            We also offer a complete range of gardening products, including premium <strong>seeds</strong>, organic <strong>fertilizers</strong>, stylish <strong>planters</strong>, and essential <strong>gardening tools</strong> to help your garden thrive. 
+            Whether you're a beginner or a seasoned gardener, Ugaoo has everything you need to grow. Start your plant journey with Ugaoo — 
+            <em>where every leaf begins a new story.</em>
+        </p>
+    </section>
+
+    <!-- Enhanced Footer Section -->
+    <footer class="footer-section">
+        <!-- Animated Banner -->
+        <div class="footer-banner">
+            <div class="banner-scroll">
+                <span>🌱 Plants Grow People 🌱 Plants Grow People 🌱 Plants Grow People 🌱</span>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>ABOUT US</h4>
+                <ul>
+                    <li><a href="#" class="footer-link">Our Story</a></li>
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">Careers</a></li>
+                    <li><a href="#" class="footer-link">Locate Stores</a></li>
+                    <li><a href="#" class="footer-link">Own Grown</a></li>
+                    <li><a href="#" class="footer-link">Garden Services & Maintenance</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>CUSTOMER CARE</h4>
+                <ul>
+                    <li><a href="#" class="footer-link">Take The Plant Quiz</a></li>
+                    <li><a href="#" class="footer-link">Track Order</a></li>
+                    <li><a href="#" class="footer-link">Shipping Policy</a></li>
+                    <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+                    <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Refund Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>OFFERS & REWARDS</h4>
+                <ul>
+                    <li><a href="#" class="footer-link">Plant Parent Rewards Club</a></li>
+                    <li><a href="#" class="footer-link">Ugaoo Coupons</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>GET IN TOUCH</h4>
+                <div class="contact-info">
+                    <p>📱 WhatsApp us: 8087087224</p>
+                    <p>📞 Call: ‪+91-9129912991‬</p>
+                    <p>✉️ Email: support@ugaoo.com</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>SIGN UP FOR OUR NEWSLETTER</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter email address" class="newsletter-input">
+                    <button type="submit" class="newsletter-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <p>For plant care tips, our featured plant of the week, exclusive offers and discounts</p>
+
+                <div class="social-icons">
+                    <a href="#" class="social-icon social-item" data-social="facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon social-item" data-social="twitter">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon social-item" data-social="instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon social-item" data-social="linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-icon social-item" data-social="youtube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

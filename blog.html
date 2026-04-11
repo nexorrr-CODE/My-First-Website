@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gardening Blogs</title>
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg,#f9f9f9,#eef6f3);
+      color: #222;
+      text-align: center;
+      line-height:1.6;
+    }
+
+    header { padding: 48px 16px 20px; }
+    header h1 {
+      font-size: 2rem;
+      color: #163a2b;
+      margin-bottom: 16px;
+      letter-spacing: .5px;
+    }
+
+    .search-box {
+      display:flex; justify-content:center;
+      margin-bottom: 40px;
+    }
+    .search-box input{
+      width:320px; padding:12px 14px;
+      border:2px solid #2d8544; border-right:0;
+      border-radius:8px 0 0 8px; outline:none;
+      font-size:15px;
+    }
+    .search-box button{
+      padding:12px 20px; border-radius:0 8px 8px 0;
+      border:2px solid #2d8544;
+      background:#2d8544; color:#fff;
+      cursor:pointer; font-weight:600;
+      font-size:15px; transition:.25s;
+    }
+    .search-box button:hover{ background:#256d38; }
+
+    .blog-container{
+      max-width:1200px; margin:0 auto 70px;
+      padding: 0 20px;
+      display:grid; gap:32px;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    }
+
+    .blog-card{
+      position:relative;
+      border-radius:16px; overflow:hidden;
+      background:#fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: transform .3s ease, box-shadow .3s ease;
+      cursor:pointer;
+    }
+    .blog-card:hover{
+      transform: translateY(-10px);
+      box-shadow: 0 14px 32px rgba(0,0,0,0.12);
+    }
+    .blog-card img{
+      width:100%; height:240px;
+      object-fit:cover; display:block;
+      transition: transform .5s ease;
+    }
+    .blog-card:hover img{ transform: scale(1.05); }
+
+    .overlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(0,0,0,0.55);
+      opacity:0; transition: opacity .25s ease;
+    }
+    .blog-card:hover .overlay{ opacity:1; }
+    .overlay button{
+      background:#2d8544; border:none; color:#fff;
+      padding:11px 20px; border-radius:10px;
+      font-weight:700; cursor:pointer;
+      font-size:14px; letter-spacing:.3px;
+    }
+    .overlay button:hover{ background:#256d38; }
+
+    .blog-title{
+      padding:18px 18px 22px;
+      font-size:1.15rem;
+      color:#172b23;
+      font-weight:700;
+    }
+
+    /* Popup */
+    .popup {
+      position:fixed; inset:0;
+      display:none; align-items:center; justify-content:center;
+      background: rgba(0,0,0,0.55);
+      z-index:1200; padding:20px;
+    }
+    .popup.show{ display:flex; }
+
+    .popup-content{
+      width:100%; max-width:640px;
+      background: linear-gradient(to bottom,#ffffff,#f9fdfb);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      animation: popIn .28s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(.92); opacity:0; }
+      to   { transform: scale(1); opacity:1; }
+    }
+    .popup-img{
+      width:100%; max-height:240px;
+      object-fit:cover; display:block;
+    }
+    .popup-body{ padding:22px; text-align:left; }
+    .popup-body h2{ margin-bottom:12px; color:#1f4e3a; }
+    .popup-body p{ line-height:1.65; margin-bottom:14px; color:#444; font-size:15px; }
+    .popup-actions{
+      display:flex; justify-content:flex-end;
+      padding:12px 22px 22px;
+    }
+    .btn-close{
+      background:#e74c3c; color:#fff;
+      border:none; padding:10px 16px;
+      border-radius:8px; cursor:pointer;
+      font-weight:700; font-size:14px;
+      transition:.25s;
+    }
+    .btn-close:hover{ background:#c0392b; }
+
+    @media (max-width:520px){
+      header h1 { font-size:1.4rem; }
+      .search-box input { width:200px; }
+      .blog-card img { height:200px; }
+      .popup-img { max-height:180px; }
+    }
+
+    /* Recent Articles Section */
+    h2.section-title{
+      font-size:40px;
+      color: #163a2b;
+      margin-bottom: 24px;
+    }
+    .articles-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px 60px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      cursor:pointer;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+    }
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .category {
+      color: #18884f;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #222;
+      line-height: 1.4;
+    }
+    .card p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    /* Season Picks Section */
+    .season-picks {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      background: #eeffb0;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .season-text {
+      flex: 1 1 300px;
+      text-align: center;
+    }
+    .season-text h2 {
+      font-size: 50px;
+      color: #00833e;
+      margin-bottom: 10px;
+    }
+    .season-text p {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #18884f;
+    }
+    .season-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      flex: 1 1 400px;
+      justify-items: center;
+    }
+    .season-images img {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+    .shop-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .shop-btn:hover {
+      background: #e6b800;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Explore Our Blogs — Simpler, Happier, Greener</h1>
+</header>
+
+<div class="search-box">
+  <input type="text" placeholder="Search our blogs">
+  <button>Search</button>
+</div>
+
+<main class="blog-container">
+  <!-- Card 1 -->
+  <div class="blog-card" onclick="openPopup('Gardening Basics','IMG/p161.webp', text1)">
+    <img src="IMG/p161.webp" alt="Gardening Basics">
+    <div class="overlay">
+      <button onclick="openPopup('Gardening Basics','IMG/p161.webp', text1); event.stopPropagation();">Explore</button>
+    </div>
+    <div class="blog-title">Gardening Basics</div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="blog-card" onclick="openPopup('Garden Maintenance','IMG/p162.webp', text2)">
+    <img src="IMG/p162.webp" alt="Garden Maintenance">
+    <div class="overlay">
+      <button onclick="openPopup('Garden Maintenance','IMG/p162.webp', text2); event.stopPropagation();">Explore</button>
+    </div>
+    <div class="blog-title">Garden Maintenance</div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="blog-card" onclick="openPopup('Kitchen Gardening','IMG/p163.webp', text3)">
+    <img src="IMG/p163.webp" alt="Kitchen Gardening">
+    <div class="overlay">
+      <button onclick="openPopup('Kitchen Gardening','IMG/p163.webp', text3); event.stopPropagation();">Explore</button>
+    </div>
+    <div class="blog-title">Kitchen Gardening</div>
+  </div>
+</main>
+
+<!-- Recent Articles Section -->
+<section>
+  <h2 class="section-title">Recent Articles</h2>
+  <div class="articles-container">
+
+    <div class="card">
+      <img src="IMG/p164.webp" alt="Diwali Family">
+      <div class="card-content">
+        <span class="category">Green Lifestyle</span>
+        <h3>10 Auspicious plants to bring home this...</h3>
+        <p>Diwali is the festival of lights and fresh beginnings. Beyond crackers, diyas, and rangoli, there’s a gentle tradition that makes homes feel alive: welcoming greenery. From Tulsi in courtyards to...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="IMG/p165.webp" alt="Jackie Shroff">
+      <div class="card-content">
+        <span class="category">Green Lifestyle</span>
+        <h3>Jackie Shroff & Ugaoo’s Mission for a...</h3>
+        <p>In a world where concrete jungles often replace lush greenery, it takes true visionaries to remind us of the beauty and necessity of plants in our lives. Bollywood legend Jackie...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="IMG/p166.webp" alt="Decorative Plants">
+      <div class="card-content">
+        <span class="category">Green Lifestyle</span>
+        <h3>The Ultimate Guide to Buying Decorative...</h3>
+        <p>There’s something magical about the presence of plants at home. They make your space feel alive, bring calm to your corners, and turn ordinary shelves into cozy green escapes. And...</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Season Picks Section -->
+<section class="season-picks">
+  <div class="season-text">
+    <h2>THIS SEASON'S BEST PICKS</h2>
+    <p>for you!</p>
+  </div>
+  <div class="season-images">
+    <div>
+      <img src="IMG/p170.webp" alt="Plant 1">
+      <button class="shop-btn">SHOP NOW</button>
+    </div>
+    <div>
+      <img src="IMG/p168.webp" alt="Plant 2">
+      <button class="shop-btn">SHOP NOW</button>
+    </div>
+    <div>
+      <img src="IMG/p169.webp" alt="Plant 3">
+      <button class="shop-btn">SHOP NOW</button>
+    </div>
+    <div>
+      <img src="IMG/p171.webp" alt="Plant 1">
+      <button class="shop-btn">SHOP NOW</button>
+    </div>
+  </div>
+</section>
+
+<!-- Popup -->
+<div class="popup" id="popup" onclick="if(event.target===this) closePopup()">
+  <div class="popup-content">
+    <img id="popup-img" class="popup-img" src="" alt="">
+    <div class="popup-body">
+      <h2 id="popup-title"></h2>
+      <p id="popup-text"></p>
+    </div>
+    <div class="popup-actions">
+      <button class="btn-close" onclick="closePopup()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const text1 = "Starting a garden may seem overwhelming, but with the right basics it becomes a joyful habit...";
+  const text2 = "A healthy garden requires consistent care throughout the year...";
+  const text3 = "Kitchen gardening is perfect for those with limited space but big dreams of growing their own food...";
+
+  function openPopup(title, imgPath, text){
+    document.getElementById('popup').classList.add('show');
+    document.getElementById('popup-title').innerText = title;
+    document.getElementById('popup-img').src = imgPath;
+    document.getElementById('popup-text').innerText = text;
+    document.addEventListener('keydown', escHandler);
+  }
+  function closePopup(){
+    document.getElementById('popup').classList.remove('show');
+    document.removeEventListener('keydown', escHandler);
+  }
+  function escHandler(e){ if(e.key==="Escape") closePopup(); }
+</script>
+
+</body>
+</html>
