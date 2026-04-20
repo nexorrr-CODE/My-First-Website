@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Surprise 🎁</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    /* animated gradient */
+    background: linear-gradient(270deg, #1d2b64, #f8cdda, #1d2b64);
+    background-size: 600% 600%;
+    animation: gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% {background-position: 0%;}
+    50% {background-position: 100%;}
+    100% {background-position: 0%;}
+}
+
+/* particles */
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    opacity: 0.5;
+    border-radius: 50%;
+    animation: float 8s linear infinite;
+}
+@keyframes float {
+    from {transform: translateY(100vh);}
+    to {transform: translateY(-10vh);}
+}
+
+/* card */
+.card {
+    width: 320px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    text-align: center;
+    color: white;
+}
+
+/* text */
+#text {
+    min-height: 80px;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* button */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #000;
+    color: white;
+    cursor: pointer;
+}
+
+/* final */
+.final {
+    font-size: 32px;
+    font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div id="text">Hey 👀 ready for something?</div>
+    <button onclick="next()">Next ➡️</button>
+</div>
+
+<script>
+
+/* particles */
+for(let i=0;i<50;i++){
+    let p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random()*100 + "vw";
+    p.style.animationDuration = (Math.random()*5+5)+"s";
+    document.body.appendChild(p);
+}
+
+/* steps */
+let steps = [
+"Okay so listen 😌",
+"I noticed something...",
+"You have elite taste in shows 🎬",
+"And yeah...",
+"<span class='final'>Avantika ✨</span><br>You’re officially cool 😎"
+];
+
+let i = 0;
+
+function next(){
+    if(i < steps.length){
+        document.getElementById("text").innerHTML = steps[i];
+        i++;
+    }
+}
+</script>
+
+</body>
+</html>
